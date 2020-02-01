@@ -1,0 +1,21 @@
+.drag-side-bar{
+    width: 15%;
+    height: calc(80vh - 20px);
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    border: thistle 1px solid;
+    
+}
+
+.hello{
+    width: 80%;
+    height: calc(100% / 21);
+    margin: auto;
+    padding: 0;
+    text-align: center;
+    justify-content: center;
+    border: thistle 1px solid;
+    
+}

@@ -1,0 +1,14 @@
+.drop-draw-bar {
+    width: calc(30% - 20px);
+    border: thistle 1px solid;
+    height: calc(80vh - 20px);
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+
+    margin-left: 20px;
+    flex-wrap: nowrap;
+    /* if you change it to wrap, it will grow in the horizontal direction */
+    text-align: center;
+    margin-top: 20px;
+}
