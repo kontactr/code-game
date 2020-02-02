@@ -23,7 +23,8 @@ class DragStore {
 }
 
 decorate(DragStore, {
-  currentCounter: observable
+  currentCounter: observable,
+  dropDrawing: observable
 });
 
 export default new DragStore();

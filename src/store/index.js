@@ -1,5 +1,9 @@
-import dragStore from './dragStore'
+import dragStore from "./dragStore";
+import canvasStore from "./canvasStore";
+import playerStore from "./playerStore";
 
 export default {
-    dragStore
-}
+  dragStore,
+  canvasStore,
+  playerStore
+};

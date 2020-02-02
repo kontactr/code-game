@@ -6,17 +6,13 @@ class UpFunction extends React.Component {
     const { operation = {} } = this.props;
     return (
       <div className="up-function" key={operation.id}>
-        {operation.id}
+        {operation.mode}
       </div>
     );
   };
 
   static composeValue = operation => {
-    return {
-      mode: "UP",
-      value: "UP",
-      key: "UP"
-    };
+    return { mode: "UP", value: "UP", key: "UP", scalar: true };
   };
 }
 

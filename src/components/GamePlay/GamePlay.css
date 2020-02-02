@@ -1,0 +1,10 @@
+.play-button {
+    color: black;
+    font-size: 2em;
+    cursor: pointer;
+    outline: none;
+}
+
+.play-button:hover {
+    color: rgba(255, 255, 255, 0.5);
+}

@@ -1,0 +1,16 @@
+.canvas-container {
+
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    margin-left: 40px;
+    border: thistle 1px solid;
+
+}
+
+.canvas-pallet {
+    height: 100%;
+    width: 100%;
+
+}

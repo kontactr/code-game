@@ -1,4 +1,8 @@
 export const BUTTONS = {
   UP: { key: "UP", mode: "UP" },
-  LOOP: { key: "LOOP", mode: "LOOP" }
+  DOWN: { key: "DOWN", mode: "DOWN" },
+  LEFT: { key: "LEFT", mode: "LEFT" },
+  RIGHT: { key: "RIGHT", mode: "RIGHT" },
+  LOOP: { key: "LOOP", mode: "LOOP" },
+  JUMP: { key: "JUMP", mode: "JUMP" }
 };

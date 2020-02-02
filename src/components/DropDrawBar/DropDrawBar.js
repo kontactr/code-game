@@ -8,7 +8,6 @@ import {
 
 class DropDrawBar extends Component {
   dropEvent = event => {
-    //event.stopPropagation();
     event.preventDefault();
 
     const { dragStore } = this.props;
@@ -18,10 +17,14 @@ class DropDrawBar extends Component {
       event.dataTransfer.getData("operation_data") || {}
     );
     let appIds = (event.target.dataset && event.target.dataset.appIds) || "";
-    console.log(appIds, 21);
+
     if (appIds) {
       appIds = appIds.split(",").filter(Boolean).reverse();
       event.target.dataset.appIds = "";
+      // Here we have to reset appIds because of data persistance.
+      // JS persist appIds of the previous event aka synthesis event.
+      // that's why you never get the whole series perfect
+      // they simply append new data with the previous one.
     } else {
       appIds = [];
     }
