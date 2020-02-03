@@ -88,7 +88,8 @@ export function generateScalarFunctionsToRun(drawingTree){
     if(fun.scalar){
       runArray.push(fun)
     }else{
-      //runArray = runArray.concat(fun.deComposeScalarValues(fun))
+      let convertedScalarValues = fun.deComposeScalarValues(fun)
+      runArray = runArray.concat(convertedScalarValues)
     }
   })
 
