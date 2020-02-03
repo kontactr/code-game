@@ -8,3 +8,8 @@
 .play-button:hover {
     color: rgba(255, 255, 255, 0.5);
 }
+
+.html-coding-icon {
+    height: 40px;
+    width: 70px;
+}

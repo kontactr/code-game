@@ -8,6 +8,7 @@ const wp_right = require("./wp_right.png");
 const ground = require("./green_grass_one.jpg");
 const thor = require("./thor.svg");
 const flash = require("./flash.svg");
+const htmlCoding = require("./html-coding.svg");
 
 let y = {
   sky, //: "https://source.unsplash.com/random/550x545/?grass",
@@ -19,7 +20,8 @@ let y = {
   ground,
   sand,
   thor,
-  flash
+  flash,
+  htmlCoding
 };
 
 export default y;

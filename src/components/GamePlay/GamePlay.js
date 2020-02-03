@@ -1,11 +1,15 @@
 import React, { Component } from "react";
 import { Icon } from "antd";
+import  images from '../../Images'
 import "./GamePlay.css";
+
+const { htmlCoding = "" } = images || {}
 
 export default class GamePlay extends Component {
   render() {
     const { onPlayButtonClick = () => {} } = this.props;
     return (
+      <>
       <Icon
         role="button"
         type="play-circle"
@@ -17,6 +21,9 @@ export default class GamePlay extends Component {
           onPlayButtonClick();
         }}
       />
+      <img className="html-coding-icon" src={htmlCoding}>
+      </img>
+      </>
     );
   }
 }
