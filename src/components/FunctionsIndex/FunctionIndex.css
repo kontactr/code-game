@@ -1,0 +1,19 @@
+.close-container {
+    position: relative;
+    width: 100%;
+
+}
+
+.close-circle {
+    position: absolute;
+    margin-left: 5px;
+    margin-top: 3px;
+    margin-right: 0;
+    align-items: flex-end;
+    display: none;
+}
+
+
+.close-container:hover .close-circle {
+    display: flex;
+}

@@ -357,11 +357,18 @@ export const playerSideCheckAndChange = (
 };
 
 export const restoreGrid = (context, allImages) => {
-  context.clearRect(0, 0, 500, 485);
-  drawSand(context, allImages["sand"]);
-  drawWater(context, allImages["water"]);
-  drawGround(context, allImages["ground"]);
-  drawSky(context, allImages["sky"]);
+  return new Promise((resolve, reject) => {
+    if (context && allImages) {
+      context.clearRect(0, 0, 500, 485);
+      drawSand(context, allImages["sand"]);
+      drawWater(context, allImages["water"]);
+      drawGround(context, allImages["ground"]);
+      drawSky(context, allImages["sky"]);
+      resolve();
+    } else {
+      reject();
+    }
+  });
 };
 
 const scalarCanavsFunctions = {
@@ -405,5 +412,5 @@ export const performGameAnimation = animationSettings => {
         setCurrentSide
       });
     });
-  }, Promise.resolve());
+  }, restoreGrid(context, allImages));
 };

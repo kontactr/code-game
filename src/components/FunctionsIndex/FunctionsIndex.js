@@ -5,6 +5,8 @@ import LeftFunction from "../LeftFunction/LeftFunction";
 import RightFunction from "../RightFunction/RightFunction";
 import LoopFunction from "../LoopFunction/LoopFunction";
 import { toJS } from "mobx";
+import "./FunctionIndex.css"
+import { Icon } from "antd";
 
 const modeToComponent = {
   UP: {
@@ -59,7 +61,15 @@ export const generateJSXForFunctions = (drawingTree = {}) => {
     let objectOrNot = !drawingTree[operation].scalar  // typeof value === 'object' && value !== null
     const Component = modeToComponent[mode].Component
     if(objectOrNot){
-       return <Component operation={drawingTree[operation]  }   ref={(refMarker) => {
+       return (
+       <div className="close-container"  > 
+         <Icon   className={"close-circle close-circle-object"} type="close-circle" onClick={(e) => {
+           e.stopPropagation()
+           e.preventDefault()
+            delete drawingTree[operation]
+           
+         }} />
+       <Component operation={drawingTree[operation]  }   ref={(refMarker) => {
         if(refMarker && refMarker.getMovementValues) {
           drawingTree[operation]["getMovementValue"] = refMarker.getMovementValues
           drawingTree[operation]["deComposeScalarValues"] = refMarker.deComposeScalarValues
@@ -67,15 +77,24 @@ export const generateJSXForFunctions = (drawingTree = {}) => {
        }} >
           {generateJSXForFunctions(value)  }
        </Component>
+       </div>
+       )
       
     }else{
       return (
+        <div className="close-container">
+          <Icon className={"close-circle"} type="close-circle" onClick={(e) => {
+            e.stopPropagation()
+            e.preventDefault()
+            delete drawingTree[operation]
+          }} />
         <Component operation={drawingTree[operation] } ref={(refMarker) => {
         if(refMarker) {
           drawingTree[operation]["getMovementValue"] = refMarker.getMovementValues
           drawingTree[operation]["deComposeScalarValues"] = refMarker.deComposeScalarValues
         }
        }}></Component>
+       </div>
       ) 
     }
   })

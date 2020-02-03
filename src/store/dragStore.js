@@ -8,7 +8,7 @@ class DragStore {
 
   drop = (options = {}, sequence = []) => {
     let parent = this.dropDrawing;
-    console.log(sequence, toJS(this.dropDrawing), 11);
+
     (sequence || []).forEach(id => {
       parent = parent[id].value;
     });
