@@ -73,6 +73,7 @@ export const generateJSXForFunctions = (drawingTree = {}) => {
         if(refMarker && refMarker.getMovementValues) {
           drawingTree[operation]["getMovementValue"] = refMarker.getMovementValues
           drawingTree[operation]["deComposeScalarValues"] = refMarker.deComposeScalarValues
+           drawingTree[operation]["generateFunctionString"] = refMarker.generateFunctionString
         }
        }} >
           {generateJSXForFunctions(value)  }
@@ -92,6 +93,7 @@ export const generateJSXForFunctions = (drawingTree = {}) => {
         if(refMarker) {
           drawingTree[operation]["getMovementValue"] = refMarker.getMovementValues
           drawingTree[operation]["deComposeScalarValues"] = refMarker.deComposeScalarValues
+          drawingTree[operation]["generateFunctionString"] = refMarker.generateFunctionString
         }
        }}></Component>
        </div>
@@ -113,4 +115,24 @@ export function generateScalarFunctionsToRun(drawingTree){
   })
 
   return runArray
+}
+
+export function generateCodeForFunctions(drawingTree){
+ let stringArray = []
+ Object.keys(drawingTree || {}).forEach(funId => {
+  let fun = drawingTree[funId]
+  
+  if(fun.scalar){
+    if(fun.generateFunctionString)
+    stringArray.push(fun.generateFunctionString())
+  }else{
+    if(fun.generateFunctionString){
+      stringArray = stringArray.concat(fun.generateFunctionString(fun))
+    }
+  }
+
+ })
+ 
+ return stringArray
+
 }

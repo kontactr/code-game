@@ -391,18 +391,11 @@ export const performGameAnimation = animationSettings => {
     functionScalarArray = []
   } = animationSettings;
 
-  console.log(
-    toJS(functionScalarArray, {
-      recurseEverything: true
-    }),
-    366
-  );
-
   functionScalarArray.reduce((current, functionToRun) => {
     return current.then(() => {
       let currentPosition = getCurrentPosition();
       let currentSide = getCurrentSide();
-      console.log(toJS(currentPosition), 3777);
+
       return scalarCanavsFunctions[functionToRun.mode]({
         context,
         allImages,

@@ -19,6 +19,10 @@ class DownFunction extends React.Component {
       scalar: true
     };
   };
+
+  generateFunctionString = () => {
+    return `moveBackward()\n`;
+  };
 }
 
 export default DownFunction;

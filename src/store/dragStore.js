@@ -20,6 +20,10 @@ class DragStore {
       } || {}
     );
   };
+
+  dropDrawingPass = (func = () => {}) => {
+    return func(this.dropDrawing);
+  };
 }
 
 decorate(DragStore, {

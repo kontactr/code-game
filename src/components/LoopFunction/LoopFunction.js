@@ -24,7 +24,6 @@ class LoopFunction extends React.Component {
     const { limit = 1 } = this.state || {};
     return (
       <>
-      
       <div
         className="loop-function"
         onDrop={e => {
@@ -35,7 +34,6 @@ class LoopFunction extends React.Component {
           } else {
             e.target.dataset.appIds = operation.id + ",";
           }
-          
         }}
         onDragOver={e => {
           e.preventDefault();
@@ -43,7 +41,7 @@ class LoopFunction extends React.Component {
       >
         <>
         {`${operation.mode} - ${operation.id}`}
-        <input value={limit} type={"number"} min={1} max={9} onChange={(e) => {
+        <input className={"loop-input"} value={limit} type={"number"} min={1} max={9} onChange={(e) => {
         this.updateLimit("limit" , e.target.value);
       }}>
       
@@ -60,20 +58,17 @@ class LoopFunction extends React.Component {
       mode: "LOOP",
       value: {},
       key: "LOOP",
-      
     };
   };
 
  deComposeScalarValues = (containerTree) => {
     let flatMapArray = []
-    if(containerTree.scalar) { return containerTree }
+    if(containerTree.scalar) { return [containerTree] }
     else if(containerTree.mode === "LOOP"){
       let loopLimiter = containerTree.getMovementValue && containerTree.getMovementValue()
       for(let indexCounter = 1 ; indexCounter <= loopLimiter ; indexCounter++){
           Object.keys(containerTree.value || {}).forEach((functionSyntax) => {
-
         let fun = containerTree.value[functionSyntax]
-        
         if(fun.scalar){
           flatMapArray.push(fun)
         }else if(fun.mode === "LOOP"){
@@ -84,14 +79,55 @@ class LoopFunction extends React.Component {
         }
       } )
       }
-      
-      
       return flatMapArray
     }else{
-      return containerTree
+      return containerTree.deComposeScalarValues(containerTree)
     }
-    
  }
+
+ generateFunctionString = (containerTree) => {
+  
+  if(containerTree.scalar) { return [containerTree.generateFunctionString()] }
+  else if(containerTree.mode === "LOOP" ){
+    let loopLimiter = containerTree.getMovementValue && containerTree.getMovementValue()
+    let loopStringArray = this.generateLoopStartString(containerTree.id , loopLimiter || 1)
+    
+    
+          Object.keys(containerTree.value || {}).forEach((functionSyntax) => {
+        let fun = containerTree.value[functionSyntax]
+        if(fun.scalar){
+          loopStringArray.push(fun.generateFunctionString())
+        }else if(fun.mode === "LOOP"){
+         loopStringArray =  loopStringArray.concat(this.generateFunctionString(fun))
+        }else{
+          if(fun.deComposeScalarValues)
+         loopStringArray =  loopStringArray.concat(fun.generateFunctionString(fun))
+        }
+      } )
+      
+
+      
+
+     loopStringArray.push(`}\n`)
+     return loopStringArray
+  }else{
+    if(containerTree.generateFunctionString){
+      return [containerTree.generateFunctionString(containerTree)]
+    }else{
+      return []
+    }
+  }
+
+
+ }
+
+ generateLoopStartString = (id, start) => {
+   return [
+     `for(let ${id}=${1} ; ${id}<=${start} ; ${id}++)\n`,
+    `{\n`
+   ]
+ }
+
 }
 
 export default LoopFunction;

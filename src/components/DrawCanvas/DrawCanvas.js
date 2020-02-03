@@ -63,13 +63,6 @@ class DrawCanvas extends Component {
         } = this.props;
         const { dropDrawing = {} } = dragStore;
 
-        console.log(
-          toJS(dropDrawing, {
-            recurseEverything: true
-          }),
-          70
-        );
-
         this.resetGame();
 
         let functionsArray = generateScalarFunctionsToRun(dropDrawing || {});

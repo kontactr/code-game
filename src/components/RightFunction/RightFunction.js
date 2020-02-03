@@ -14,6 +14,10 @@ class RightFunction extends React.Component {
   static composeValue = operation => {
     return { mode: "RIGHT", value: "RIGHT", key: "RIGHT", scalar: true };
   };
+
+  generateFunctionString = () => {
+    return `moveRight()\n`;
+  };
 }
 
 export default RightFunction;

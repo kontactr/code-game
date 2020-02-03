@@ -14,6 +14,10 @@ class LeftFunction extends React.Component {
   static composeValue = operation => {
     return { mode: "LEFT", value: "LEFT", key: "LEFT", scalar: true };
   };
+
+  generateFunctionString = () => {
+    return `moveLeft()\n`;
+  };
 }
 
 export default LeftFunction;

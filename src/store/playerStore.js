@@ -11,8 +11,9 @@ class PlayerStore {
     defaultYModifier: 0
   });
 
+  registerGameStartCallback = () => {};
+
   setCurrentPosition = position => {
-    console.log(position, 1230);
     this.currentPosition = {
       x: position.x,
       y: position.y,
@@ -28,8 +29,6 @@ class PlayerStore {
   getCurrentSide = () => {
     return this.currentSide;
   };
-
-  registerGameStartCallback = () => {};
 
   initUser = settings => {
     const {

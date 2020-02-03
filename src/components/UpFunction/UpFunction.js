@@ -14,6 +14,10 @@ class UpFunction extends React.Component {
   static composeValue = operation => {
     return { mode: "UP", value: "UP", key: "UP", scalar: true };
   };
+
+  generateFunctionString = () => {
+    return `moveForward()\n`;
+  };
 }
 
 export default UpFunction;
