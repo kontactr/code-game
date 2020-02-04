@@ -3,6 +3,6 @@ export const BUTTONS = {
   DOWN: { key: "DOWN", mode: "DOWN" },
   LEFT: { key: "LEFT", mode: "LEFT" },
   RIGHT: { key: "RIGHT", mode: "RIGHT" },
-  LOOP: { key: "LOOP", mode: "LOOP" },
-  JUMP: { key: "JUMP", mode: "JUMP" }
+  LOOP: { key: "LOOP", mode: "LOOP" }
+  //JUMP: { key: "JUMP", mode: "JUMP" }
 };
