@@ -396,6 +396,10 @@ export const performGameAnimation = animationSettings => {
       let currentPosition = getCurrentPosition();
       let currentSide = getCurrentSide();
 
+      if (functionToRun.ref && functionToRun.ref.scrollIntoView) {
+        functionToRun.ref.scrollIntoView();
+      }
+
       return scalarCanavsFunctions[functionToRun.mode]({
         context,
         allImages,

@@ -73,7 +73,8 @@ export const generateJSXForFunctions = (drawingTree = {}) => {
         if(refMarker && refMarker.getMovementValues) {
           drawingTree[operation]["getMovementValue"] = refMarker.getMovementValues
           drawingTree[operation]["deComposeScalarValues"] = refMarker.deComposeScalarValues
-           drawingTree[operation]["generateFunctionString"] = refMarker.generateFunctionString
+          drawingTree[operation]["generateFunctionString"] = refMarker.generateFunctionString
+          drawingTree[operation]["ref"] = refMarker
         }
        }} >
           {generateJSXForFunctions(value)  }
@@ -94,6 +95,7 @@ export const generateJSXForFunctions = (drawingTree = {}) => {
           drawingTree[operation]["getMovementValue"] = refMarker.getMovementValues
           drawingTree[operation]["deComposeScalarValues"] = refMarker.deComposeScalarValues
           drawingTree[operation]["generateFunctionString"] = refMarker.generateFunctionString
+          drawingTree[operation]["ref"] = refMarker
         }
        }}></Component>
        </div>

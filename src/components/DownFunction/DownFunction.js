@@ -2,10 +2,22 @@ import React, { Component } from "react";
 import "./DownFunction.css";
 
 class DownFunction extends React.Component {
+  scrollIntoView = () => {
+    this.downFunctionView.scrollIntoView({
+      behavior: "smooth"
+    });
+  };
+
   render = () => {
     const { operation = {} } = this.props;
     return (
-      <div className="down-function" key={operation.id}>
+      <div
+        className="down-function"
+        key={operation.id}
+        ref={downFunctionView => {
+          this.downFunctionView = downFunctionView;
+        }}
+      >
         {operation.mode}
       </div>
     );
