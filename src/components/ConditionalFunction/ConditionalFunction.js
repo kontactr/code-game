@@ -1,8 +1,11 @@
 import React from "react";
-import "./LoopFunction.css";
+import "./ConditionalFunction.css"
+import  getSequence from "../../Utils/sequenceCreator";
+import { toJS } from "mobx";
 
 
-class LoopFunction extends React.Component {
+
+class ConditionalFunction extends React.Component {
 
   state = {
     limit : 1
@@ -14,10 +17,6 @@ class LoopFunction extends React.Component {
       }))
   }
 
-  getComponent = () => {
-    return LoopFunction;
-  };
-
   getMovementValues = () => {
     return this.state.limit || 1
   }
@@ -26,42 +25,73 @@ class LoopFunction extends React.Component {
   render = () => {
     const { operation, children } = this.props;
     const { limit = 1 } = this.state || {};
+    
+    const { __internalSequence = [] } = operation.value
+
     return (
-      <>
+    <>
       <div
         className="loop-function"
         onDrop={e => {
           e.preventDefault();
-
           if (e.target.dataset.appIds) {
-            e.target.dataset.appIds += operation.id + ",";
+            e.target.dataset.appIds +=  __internalSequence[0]   + "," + operation.id + ",";
           } else {
-            e.target.dataset.appIds = operation.id + ",";
+            e.target.dataset.appIds = __internalSequence[0]   + "," + operation.id + ",";
           }
         }}
         onDragOver={e => {
           e.preventDefault();
         }}
       >
-        <>
-        {`${operation.mode} - ${operation.id}`}
-        <input className={"loop-input"} value={limit} type={"number"} min={1} max={9} onChange={(e) => {
-        this.updateLimit("limit" , e.target.value);
-      }}>
-      
-      </input>
-        {children}
-        </>
+        {this.renderChild(operation.value[__internalSequence[0]])}
       </div>
-      </>
-    );
+      <div
+        className="loop-function"
+        onDrop={e => {
+          e.preventDefault();
+
+          if (e.target.dataset.appIds) {
+            e.target.dataset.appIds += __internalSequence[1]   + "," + operation.id + ",";
+          } else {
+            e.target.dataset.appIds = __internalSequence[1]   + "," + operation.id + ",";
+          }
+        }}
+        onDragOver={e => {
+          e.preventDefault();
+        }}>
+          {this.renderChild(operation.value[__internalSequence[1]])}
+        </div> 
+    </> )
   };
 
+   renderChild = (drawingTree) => {
+    
+    return <>Hello World</>
+    
+  }
+
   static composeValue = operation => {
+    let a = getSequence()
+    let b = getSequence()
     return {
-      mode: "LOOP",
-      value: {},
-      key: "LOOP",
+      mode: "IF-ELSE",
+      value: {
+        [a] : {
+          value: {
+
+          }
+        },
+        [b] : {
+          value: {
+
+          }
+        },
+        __internalSequence: [a,b]
+      },
+      renderChild: true,
+      scalar: false,
+      key: "IF-ELSE",
     };
   };
 
@@ -133,4 +163,4 @@ class LoopFunction extends React.Component {
 
 }
 
-export default LoopFunction;
+export default ConditionalFunction;

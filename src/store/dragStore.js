@@ -1,4 +1,4 @@
-import { decorate, observable } from "mobx";
+import { decorate, observable, toJS } from "mobx";
 import getSequence from "../Utils/sequenceCreator";
 
 class DragStore {
@@ -8,6 +8,8 @@ class DragStore {
 
   drop = (options = {}, sequence = []) => {
     let parent = this.dropDrawing;
+
+    console.log(toJS(sequence), 12);
 
     (sequence || []).forEach(id => {
       parent = parent[id].value;
