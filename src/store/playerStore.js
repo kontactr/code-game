@@ -1,4 +1,4 @@
-import { decorate, observable, action, toJS } from "mobx";
+import { decorate, observable, action } from "mobx";
 
 class PlayerStore {
   currentStep = 0;

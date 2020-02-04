@@ -3,7 +3,7 @@ import "./Header.css";
 import GamePlay from "../GamePlay/GamePlay";
 import { observer, inject } from "mobx-react";
 import { generateCodeForFunctions } from "../FunctionsIndex/FunctionsIndex";
-import { Modal, Button } from "antd";
+
 
 
 class Header extends Component {

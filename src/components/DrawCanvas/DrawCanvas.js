@@ -4,15 +4,9 @@ import { observer, inject } from "mobx-react";
 import { generateScalarFunctionsToRun } from "../FunctionsIndex/FunctionsIndex";
 import {
   drawInitPlayer,
-  drawGround,
-  drawWater,
-  drawSky,
-  drawSand,
   performGameAnimation,
   restoreGrid
 } from "./CanavasManager";
-
-import { toJS } from "mobx";
 
 class DrawCanvas extends Component {
   state = {

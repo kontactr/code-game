@@ -1,6 +1,6 @@
-import React, { Component } from "react";
+import React from "react";
 import "./LoopFunction.css";
-import { toJS } from "mobx";
+
 
 class LoopFunction extends React.Component {
 

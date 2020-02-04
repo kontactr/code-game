@@ -1,4 +1,4 @@
-import { decorate, observable, toJS } from "mobx";
+import { decorate, observable } from "mobx";
 import AllImages from "../Images";
 
 class CanvasStore {

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import "./UpFunction.css";
 
 class UpFunction extends React.Component {

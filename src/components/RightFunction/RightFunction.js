@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import "./RightFunction.css";
 
 class RightFunction extends React.Component {

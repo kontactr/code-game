@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import UpFunction from "../UpFunction/UpFunction";
 import DownFunction from "../DownFunction/DownFunction";
 import LeftFunction from "../LeftFunction/LeftFunction";
