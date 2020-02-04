@@ -16,7 +16,7 @@ class RightFunction extends React.Component {
   };
 
   generateFunctionString = () => {
-    return `moveRight()\n`;
+    return `moveRight();\n`;
   };
 }
 

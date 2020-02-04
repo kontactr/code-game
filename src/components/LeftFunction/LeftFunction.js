@@ -16,7 +16,7 @@ class LeftFunction extends React.Component {
   };
 
   generateFunctionString = () => {
-    return `moveLeft()\n`;
+    return `moveLeft();\n`;
   };
 }
 

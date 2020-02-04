@@ -14,3 +14,9 @@
     width: 70px;
     cursor: pointer;
 }
+
+
+.modal-container {
+    overflow-y: "scroll";
+    max-height: "100px";
+}

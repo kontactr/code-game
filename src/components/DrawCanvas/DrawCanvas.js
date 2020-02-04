@@ -30,8 +30,10 @@ class DrawCanvas extends Component {
           height={485}
           width={500}
           ref={ref => {
-            this.canvasRef = ref;
-            this.context = ref.getContext("2d");
+            if (ref) {
+              this.canvasRef = ref;
+              this.context = ref.getContext("2d");
+            }
           }}
         />
       </div>

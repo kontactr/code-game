@@ -1,5 +1,5 @@
 .loop-function {
-    min-height: 150px;
+    min-height: 121px;
     width: calc(100% - 2px);
     overflow: scroll;
     overflow-x: hidden;

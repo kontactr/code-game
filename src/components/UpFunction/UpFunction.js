@@ -16,7 +16,7 @@ class UpFunction extends React.Component {
   };
 
   generateFunctionString = () => {
-    return `moveForward()\n`;
+    return `moveForward();\n`;
   };
 }
 

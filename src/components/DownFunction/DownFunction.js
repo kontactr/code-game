@@ -21,7 +21,7 @@ class DownFunction extends React.Component {
   };
 
   generateFunctionString = () => {
-    return `moveBackward()\n`;
+    return `moveBackward();\n`;
   };
 }
 

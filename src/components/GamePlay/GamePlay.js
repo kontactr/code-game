@@ -1,9 +1,11 @@
 import React, { Component } from "react";
-import { Icon, Modal } from "antd";
+import { Icon, Modal, Tabs } from "antd";
 import  images from '../../Images'
 import "./GamePlay.css";
+import { spacePrettify } from "../FunctionsIndex/FunctionsIndex";
 
 const { htmlCoding = "" } = images || {}
+const { TabPane } = Tabs;
 
 export default class GamePlay extends Component {
   render() {
@@ -31,20 +33,27 @@ export default class GamePlay extends Component {
 
   generateModal = () => {
     const { display = false , title = "Learn Code" ,onOk = () => {} , onCancel = () => {} , onFunctionTree = () => {} } = this.props;
+    const stringCodes =  onFunctionTree() || []
     return (<Modal
-          style={{
-            maxHeight: "80vh",
-            overflowY: "auto"
-
-          }}
           title={title}
           visible={display}
           onOk={onOk}
           onCancel={onCancel}
+          className={"modal-container"}
+          
         >
-         <code>
-           { this.generateJSX(onFunctionTree())}
-         </code>
+         <Tabs defaultActiveKey="1">
+            <TabPane tab="Code" key="1">
+                  <code>
+                    { this.generateJSX(stringCodes) || <>No Data To Parse</>}
+                 </code>
+            </TabPane>
+            <TabPane tab="Space Prettify" key="2">
+                  <code>
+                    {this.generateJSX(spacePrettify(stringCodes)) || <>No Data To Parse</>}
+                 </code>
+            </TabPane>
+         </Tabs>
         </Modal>)
   }
 
@@ -52,8 +61,7 @@ export default class GamePlay extends Component {
     if(arr.length){
       return (arr).map((line) => {
         return (<>
-        {line}
-        <br />
+        <pre>{line}</pre>
         </>)
       })
     }else{

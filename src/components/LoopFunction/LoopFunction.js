@@ -123,8 +123,7 @@ class LoopFunction extends React.Component {
 
  generateLoopStartString = (id, start) => {
    return [
-     `for(let ${id}=${1} ; ${id}<=${start} ; ${id}++)\n`,
-    `{\n`
+     `for(let ${id}=${1} ; ${id}<=${start} ; ${id}++) {\n`
    ]
  }
 

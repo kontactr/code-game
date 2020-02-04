@@ -136,3 +136,30 @@ export function generateCodeForFunctions(drawingTree){
  return stringArray
 
 }
+
+
+export const spacePrettify = (lines) => {
+  
+  let spaceCounter = 0
+  let newArrStrings = (lines || []).map((line) => {
+      if(line.includes("{")){
+          let string = generateSpaceString(spaceCounter)+line
+          spaceCounter += 2
+          return string
+      }else if(line.includes("}")){
+          spaceCounter -= 2
+          return generateSpaceString(spaceCounter)+line
+      }else{
+          return  generateSpaceString(spaceCounter)+line
+      }
+  })
+  return newArrStrings
+}
+
+const generateSpaceString = (number) => {
+  let temp = ""
+  for(let i=0 ; i<number ; i++){
+    temp += "  "
+  }
+  return temp
+}
