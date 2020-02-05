@@ -1,0 +1,12 @@
+.function-name-function {
+    min-height: 50px;
+    width: calc(100%-2px);
+    justify-content: center;
+    align-items: center;
+
+    display: flex;
+    flex-wrap: nowrap;
+    color: thistle;
+    border: 1px solid saddlebrown;
+
+}

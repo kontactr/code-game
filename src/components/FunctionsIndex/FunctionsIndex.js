@@ -4,11 +4,13 @@ import DownFunction from "../DownFunction/DownFunction";
 import LeftFunction from "../LeftFunction/LeftFunction";
 import RightFunction from "../RightFunction/RightFunction";
 import LoopFunction from "../LoopFunction/LoopFunction";
-import { toJS } from "mobx";
+import FunctionFirst from '../FunctionFirst/FunctionFirst'
 import "./FunctionIndex.css"
 import { Icon } from "antd";
+import { toJS, observable } from "mobx";
 
-const modeToComponent = {
+
+const modeToComponent =  ({
   UP: {
     mode: "UP",
     Component: UpFunction,
@@ -43,10 +45,32 @@ const modeToComponent = {
     mode: "JUMP",
     Component: UpFunction,
     composeValue: UpFunction.composeValue
+  },
+  FUNCTION: {
+    mode: "FUNCTION",
+    Component: FunctionFirst,
+    composeValue: FunctionFirst.composeValue
   }
-};
+});
+
+export const addModeToComponent = (options = {}) => {
+  const { mode = '' , Component = '' , composeValue = '' } = options
+  if( !modeToComponent[mode]  &&  mode && Component && composeValue){
+    modeToComponent[mode] = {
+      mode,
+      Component,
+      composeValue
+    }
+  }
+}
+
+export const deleteModeToComponent = (mode) => {
+  if(mode) delete modeToComponent[mode]
+}
+
 
 export const generateComposeValue = (mode, pathIds, drawingData) => {
+  console.log(toJS(mode) , toJS(modeToComponent)  , 58)
   return modeToComponent[mode].composeValue(mode , pathIds , drawingData);
 }
 
@@ -54,19 +78,26 @@ export const generateComposeValue = (mode, pathIds, drawingData) => {
 export const generateJSXForFunctions = (drawingTree = {}) => {
   let objectKeys = Object.keys(drawingTree || {})
   if(!objectKeys.length) {return (<></>)}
-
+  console.log(toJS(drawingTree) , 655)
   return objectKeys.map((operation) => {
+    
     let value = drawingTree[operation].value;
     let mode = drawingTree[operation].mode ;
+  
+
     let objectOrNot = !drawingTree[operation].scalar  // typeof value === 'object' && value !== null
     const Component = modeToComponent[mode].Component
+
+
     if(objectOrNot){
        return (
        <div className="close-container"  > 
          <Icon   className={"close-circle close-circle-object"} type="close-circle" onClick={(e) => {
            e.stopPropagation()
            e.preventDefault()
-            delete drawingTree[operation]
+           let t = drawingTree[operation]
+           t.deleteEffect && t.deleteEffect()
+           delete drawingTree[operation]       
            
          }} />
        <Component operation={drawingTree[operation]  }   ref={(refMarker) => {
@@ -74,6 +105,7 @@ export const generateJSXForFunctions = (drawingTree = {}) => {
           drawingTree[operation]["getMovementValue"] = refMarker.getMovementValues
           drawingTree[operation]["deComposeScalarValues"] = refMarker.deComposeScalarValues
           drawingTree[operation]["generateFunctionString"] = refMarker.generateFunctionString
+          drawingTree[operation]["deleteEffect"] = refMarker.deleteEffect
           drawingTree[operation]["ref"] = refMarker
         }
        }} >
@@ -88,6 +120,8 @@ export const generateJSXForFunctions = (drawingTree = {}) => {
           <Icon className={"close-circle"} type="close-circle" onClick={(e) => {
             e.stopPropagation()
             e.preventDefault()
+            let t = drawingTree[operation]
+           t.deleteEffect && t.deleteEffect()
             delete drawingTree[operation]
           }} />
         <Component operation={drawingTree[operation] } ref={(refMarker) => {
@@ -95,7 +129,9 @@ export const generateJSXForFunctions = (drawingTree = {}) => {
           drawingTree[operation]["getMovementValue"] = refMarker.getMovementValues
           drawingTree[operation]["deComposeScalarValues"] = refMarker.deComposeScalarValues
           drawingTree[operation]["generateFunctionString"] = refMarker.generateFunctionString
+          drawingTree[operation]["deleteEffect"] = refMarker.deleteEffect
           drawingTree[operation]["ref"] = refMarker
+
         }
        }}></Component>
        </div>
@@ -108,6 +144,7 @@ export function generateScalarFunctionsToRun(drawingTree){
   let runArray = []
   Object.keys(drawingTree || {}).forEach((funId) => {
     let fun = drawingTree[funId]
+    console.log(toJS(fun) , 147)
     if(fun.scalar){
       runArray.push(fun)
     }else{
