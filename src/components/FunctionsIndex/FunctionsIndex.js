@@ -6,7 +6,6 @@ import RightFunction from "../RightFunction/RightFunction";
 import LoopFunction from "../LoopFunction/LoopFunction";
 import FunctionFirst from '../FunctionFirst/FunctionFirst'
 import ConditionalFunction from '../ConditionalFunction/ConditionalFunction'
-import { toJS } from "mobx";
 import "./FunctionIndex.css"
 import { Icon } from "antd";
 import { toJS, observable } from "mobx";
