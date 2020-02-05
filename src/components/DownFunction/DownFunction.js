@@ -8,6 +8,10 @@ class DownFunction extends React.Component {
     });
   };
 
+  getComponent = () => {
+    return DownFunction;
+  };
+
   render = () => {
     const { operation = {} } = this.props;
     return (

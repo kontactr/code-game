@@ -8,6 +8,10 @@ class UpFunction extends React.Component {
     });
   };
 
+  getComponent = () => {
+    return UpFunction;
+  };
+
   render = () => {
     const { operation = {} } = this.props;
     return (

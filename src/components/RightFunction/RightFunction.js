@@ -8,6 +8,10 @@ class RightFunction extends React.Component {
     });
   };
 
+  getComponent = () => {
+    return RightFunction;
+  };
+
   render = () => {
     const { operation = {} } = this.props;
     return (
