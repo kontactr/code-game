@@ -5,6 +5,8 @@ import LeftFunction from "../LeftFunction/LeftFunction";
 import RightFunction from "../RightFunction/RightFunction";
 import LoopFunction from "../LoopFunction/LoopFunction";
 import FunctionFirst from '../FunctionFirst/FunctionFirst'
+import ConditionalFunction from '../ConditionalFunction/ConditionalFunction'
+import { toJS } from "mobx";
 import "./FunctionIndex.css"
 import { Icon } from "antd";
 import { toJS, observable } from "mobx";
@@ -41,15 +43,15 @@ const modeToComponent =  ({
     Component: RightFunction,
     composeValue: RightFunction.composeValue
   },
-  JUMP: {
-    mode: "JUMP",
-    Component: UpFunction,
-    composeValue: UpFunction.composeValue
-  },
   FUNCTION: {
     mode: "FUNCTION",
     Component: FunctionFirst,
     composeValue: FunctionFirst.composeValue
+  },
+  "IF-ELSE": {
+    mode: "IF-ELSE",
+    Component: ConditionalFunction,
+    composeValue: ConditionalFunction.composeValue
   }
 });
 
@@ -78,7 +80,7 @@ export const generateComposeValue = (mode, pathIds, drawingData) => {
 export const generateJSXForFunctions = (drawingTree = {}) => {
   let objectKeys = Object.keys(drawingTree || {})
   if(!objectKeys.length) {return (<></>)}
-  console.log(toJS(drawingTree) , 655)
+
   return objectKeys.map((operation) => {
     
     let value = drawingTree[operation].value;
@@ -86,6 +88,7 @@ export const generateJSXForFunctions = (drawingTree = {}) => {
   
 
     let objectOrNot = !drawingTree[operation].scalar  // typeof value === 'object' && value !== null
+    let decideWhoRenderChildren = drawingTree[operation].renderChild
     const Component = modeToComponent[mode].Component
 
 
@@ -109,7 +112,7 @@ export const generateJSXForFunctions = (drawingTree = {}) => {
           drawingTree[operation]["ref"] = refMarker
         }
        }} >
-          {generateJSXForFunctions(value)  }
+          { !decideWhoRenderChildren  &&  generateJSXForFunctions(value)  }
        </Component>
        </div>
        )
@@ -181,14 +184,21 @@ export const spacePrettify = (lines) => {
   
   let spaceCounter = 0
   let newArrStrings = (lines || []).map((line) => {
-      if(line.includes("{")){
+      let openingCount = ((line || '').match(/{/g) || []).length
+      let closingCount = ((line || '').match(/}/g) || []).length
+      if(openingCount > closingCount){
           let string = generateSpaceString(spaceCounter)+line
           spaceCounter += 2
           return string
-      }else if(line.includes("}")){
+      }else if(openingCount < closingCount){
           spaceCounter -= 2
           return generateSpaceString(spaceCounter)+line
-      }else{
+      }else if(openingCount === closingCount && openingCount !== 0){
+          spaceCounter -= 2
+          let t =  generateSpaceString(spaceCounter)+line
+          spaceCounter += 2
+          return t
+      }else {
           return  generateSpaceString(spaceCounter)+line
       }
   })

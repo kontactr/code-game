@@ -8,6 +8,10 @@ class LeftFunction extends React.Component {
     });
   };
 
+  getComponent = () => {
+    return LeftFunction;
+  };
+
   render = () => {
     const { operation = {} } = this.props;
     return (
