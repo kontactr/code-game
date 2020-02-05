@@ -148,14 +148,21 @@ export const spacePrettify = (lines) => {
   
   let spaceCounter = 0
   let newArrStrings = (lines || []).map((line) => {
-      if(line.includes("{")){
+      let openingCount = ((line || '').match(/{/g) || []).length
+      let closingCount = ((line || '').match(/}/g) || []).length
+      if(openingCount > closingCount){
           let string = generateSpaceString(spaceCounter)+line
           spaceCounter += 2
           return string
-      }else if(line.includes("}")){
+      }else if(openingCount < closingCount){
           spaceCounter -= 2
           return generateSpaceString(spaceCounter)+line
-      }else{
+      }else if(openingCount === closingCount && openingCount !== 0){
+          spaceCounter -= 2
+          let t =  generateSpaceString(spaceCounter)+line
+          spaceCounter += 2
+          return t
+      }else {
           return  generateSpaceString(spaceCounter)+line
       }
   })
