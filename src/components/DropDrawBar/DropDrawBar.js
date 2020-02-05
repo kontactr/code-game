@@ -5,6 +5,7 @@ import {
   generateJSXForFunctions,
   generateComposeValue
 } from "../FunctionsIndex/FunctionsIndex";
+import getSequence from "../../Utils/sequenceCreator";
 
 class DropDrawBar extends Component {
   dropEvent = event => {
@@ -29,7 +30,12 @@ class DropDrawBar extends Component {
       appIds = [];
     }
 
-    drop(generateComposeValue(eventData.mode, appIds, dropDrawing), appIds);
+    let __newId = getSequence();
+    drop(
+      generateComposeValue(eventData.mode, appIds, dropDrawing, __newId),
+      appIds,
+      __newId
+    );
   };
 
   dragOverEvent = event => {

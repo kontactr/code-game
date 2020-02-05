@@ -1,20 +1,16 @@
 import React, { Component } from "react";
 import "./DragSidebar.css";
-import { BUTTONS } from "../../Utils/constants";
+
 import { observer, inject } from "mobx-react";
 
 class DragSideBar extends Component {
-  processedButtons = (() => {
-    let temp = Object.keys(BUTTONS);
-    return () => [temp, BUTTONS];
-  })();
-
   render() {
-    const [buttons, buttonObject] = this.processedButtons();
     const { dragStore = {} } = this.props;
+    const { BUTTONS } = dragStore;
+
     return (
       <div className="drag-side-bar">
-        {buttons.map(key => {
+        {Object.keys(BUTTONS).map(key => {
           return (
             <div
               className="hello"
