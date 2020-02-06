@@ -71,16 +71,18 @@ class DrawCanvas extends Component {
 
         console.log(toJS(cyclicTree), 69);
 
-        /*let functionsArray = generateScalarFunctionsToRun(dropDrawing || {});
+        if (!cyclicTree[1]) {
+          let functionsArray = generateScalarFunctionsToRun(dropDrawing || {});
 
-        performGameAnimation({
-          ...playerStore,
-          functionScalarArray: functionsArray || [],
-          allImages,
-          context: this.context,
-          canvasHeight: 485,
-          canvasWidth: 500
-        });*/
+          performGameAnimation({
+            ...playerStore,
+            functionScalarArray: functionsArray || [],
+            allImages,
+            context: this.context,
+            canvasHeight: 485,
+            canvasWidth: 500
+          });
+        }
       }
     });
   };
