@@ -14,6 +14,10 @@ class LoopFunction extends React.Component {
       }))
   }
 
+  getComponent = () => {
+    return LoopFunction;
+  };
+
   getMovementValues = () => {
     return this.state.limit || 1
   }
