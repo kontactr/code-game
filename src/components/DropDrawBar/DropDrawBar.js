@@ -6,6 +6,7 @@ import {
   generateComposeValue
 } from "../FunctionsIndex/FunctionsIndex";
 import getSequence from "../../Utils/sequenceCreator";
+import { toJS } from "mobx";
 
 class DropDrawBar extends Component {
   dropEvent = event => {
@@ -57,6 +58,7 @@ class DropDrawBar extends Component {
   generateDrawings = () => {
     const { dragStore } = this.props;
     const { dropDrawing = {} } = dragStore || {};
+    toJS(dropDrawing);
     return generateJSXForFunctions(dropDrawing);
   };
 }

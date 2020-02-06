@@ -1,5 +1,3 @@
-import { toJS } from "mobx";
-
 export const drawGreenGrass = (context, image) => {
   if (image && context) {
     context.save();

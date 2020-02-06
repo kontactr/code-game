@@ -1,5 +1,5 @@
+import { decorate, observable, action, toJS } from "mobx";
 
-import { decorate, observable, action , toJS } from "mobx";
 import getSequence from "../Utils/sequenceCreator";
 import { observer } from "mobx-react";
 
@@ -10,9 +10,6 @@ class DragStore {
 
   drop = (options = {}, sequence = [], __newId = getSequence()) => {
     let parent = this.dropDrawing;
-
-    console.log(toJS(sequence), 12);
-
     (sequence || []).forEach(id => {
       parent = parent[id].value;
     });
@@ -35,6 +32,7 @@ class DragStore {
     LEFT: { key: "LEFT", mode: "LEFT" },
     RIGHT: { key: "RIGHT", mode: "RIGHT" },
     LOOP: { key: "LOOP", mode: "LOOP" },
+    "IF-ELSE": { key: "IF-ELSE", mode: "IF-ELSE" },
     FUNCTION: { key: "FUNCTION", mode: "FUNCTION" }
   });
 

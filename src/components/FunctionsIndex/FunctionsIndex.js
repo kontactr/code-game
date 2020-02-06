@@ -8,7 +8,6 @@ import FunctionFirst from '../FunctionFirst/FunctionFirst'
 import ConditionalFunction from '../ConditionalFunction/ConditionalFunction'
 import "./FunctionIndex.css"
 import { Icon } from "antd";
-import { toJS, observable } from "mobx";
 
 
 const modeToComponent =  ({
@@ -47,7 +46,7 @@ const modeToComponent =  ({
     Component: FunctionFirst,
     composeValue: FunctionFirst.composeValue
   },
-  "IF-ELSE": {
+"IF-ELSE": {
     mode: "IF-ELSE",
     Component: ConditionalFunction,
     composeValue: ConditionalFunction.composeValue
@@ -71,7 +70,7 @@ export const deleteModeToComponent = (mode) => {
 
 
 export const generateComposeValue = (mode, pathIds, drawingData) => {
-  console.log(toJS(mode) , toJS(modeToComponent)  , 58)
+  
   return modeToComponent[mode].composeValue(mode , pathIds , drawingData);
 }
 
@@ -79,21 +78,20 @@ export const generateComposeValue = (mode, pathIds, drawingData) => {
 export const generateJSXForFunctions = (drawingTree = {}) => {
   let objectKeys = Object.keys(drawingTree || {})
   if(!objectKeys.length) {return (<></>)}
-
-  return objectKeys.map((operation) => {
     
+  return objectKeys.map((operation) => {
     let value = drawingTree[operation].value;
     let mode = drawingTree[operation].mode ;
   
 
     let objectOrNot = !drawingTree[operation].scalar  // typeof value === 'object' && value !== null
-    let decideWhoRenderChildren = drawingTree[operation].renderChild
+       let decideWhoRenderChildren = drawingTree[operation].renderChild
     const Component = modeToComponent[mode].Component
 
 
     if(objectOrNot){
        return (
-       <div className="close-container"  > 
+       <div className="close-container" key={drawingTree[operation].id || new Date()  } > 
          <Icon   className={"close-circle close-circle-object"} type="close-circle" onClick={(e) => {
            e.stopPropagation()
            e.preventDefault()
@@ -111,14 +109,14 @@ export const generateJSXForFunctions = (drawingTree = {}) => {
           drawingTree[operation]["ref"] = refMarker
         }
        }} >
-          { !decideWhoRenderChildren  &&  generateJSXForFunctions(value)  }
+          {!decideWhoRenderChildren &&  generateJSXForFunctions(value)  }
        </Component>
        </div>
        )
       
     }else{
       return (
-        <div className="close-container">
+        <div className="close-container" key={drawingTree[operation].id || new Date()  }>
           <Icon className={"close-circle"} type="close-circle" onClick={(e) => {
             e.stopPropagation()
             e.preventDefault()
@@ -146,7 +144,7 @@ export function generateScalarFunctionsToRun(drawingTree){
   let runArray = []
   Object.keys(drawingTree || {}).forEach((funId) => {
     let fun = drawingTree[funId]
-    console.log(toJS(fun) , 147)
+    
     if(fun.scalar){
       runArray.push(fun)
     }else{
@@ -173,6 +171,7 @@ export function generateCodeForFunctions(drawingTree){
   }
 
  })
+
  
  return stringArray
 
