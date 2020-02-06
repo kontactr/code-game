@@ -5,8 +5,6 @@ import { generateJSXForFunctions, deleteModeToComponent, addModeToComponent } fr
 import { deleteButtonsToDrawer, addButtonsToDrawer } from "../../Utils/constants";
 import FunctionName from "./FunctionName/FunctionName"
 import { inject, observer } from "mobx-react";
-import { toJS } from "mobx";
-
 
 
 class FunctionFirst extends React.Component {
@@ -48,11 +46,13 @@ class FunctionFirst extends React.Component {
       composeValue: (...rest) => {
         return {
           mode: "C_FC_" + this.id,
-          value: operation.value,
+          value: "C_FC_" + this.id,
+          __value: operation.value,
           key: "C_FC_" + this.id,
           scalar: false,
           renderChild: true,
-          deComposeScalarValues: FunctionName.deComposeScalarValues
+          deComposeScalarValues: FunctionName.deComposeScalarValues,
+          generateFunctionString: FunctionName.generateFunctionString
         }
       }
     })
@@ -133,6 +133,11 @@ class FunctionFirst extends React.Component {
          loopStringArray =  loopStringArray.concat(fun.generateFunctionString(fun))
         }
       } )
+
+      if(loopStringArray.length === 1){
+        loopStringArray.push("// No operation ;\n")
+      }
+
      loopStringArray.push(`}\n`)
      return loopStringArray
   }else{

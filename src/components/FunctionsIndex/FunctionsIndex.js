@@ -7,7 +7,8 @@ import LoopFunction from "../LoopFunction/LoopFunction";
 import FunctionFirst from '../FunctionFirst/FunctionFirst'
 import "./FunctionIndex.css"
 import { Icon } from "antd";
-import { toJS, observable } from "mobx";
+import ConditionalFunction from "../ConditionalFunction/ConditionalFunction";
+import { toJS } from "mobx";
 
 
 const modeToComponent =  ({
@@ -50,6 +51,11 @@ const modeToComponent =  ({
     mode: "FUNCTION",
     Component: FunctionFirst,
     composeValue: FunctionFirst.composeValue
+  },
+"IF-ELSE": {
+    mode: "IF-ELSE",
+    Component: ConditionalFunction,
+    composeValue: ConditionalFunction.composeValue
   }
 });
 
@@ -70,7 +76,7 @@ export const deleteModeToComponent = (mode) => {
 
 
 export const generateComposeValue = (mode, pathIds, drawingData) => {
-  console.log(toJS(mode) , toJS(modeToComponent)  , 58)
+  
   return modeToComponent[mode].composeValue(mode , pathIds , drawingData);
 }
 
@@ -78,14 +84,14 @@ export const generateComposeValue = (mode, pathIds, drawingData) => {
 export const generateJSXForFunctions = (drawingTree = {}) => {
   let objectKeys = Object.keys(drawingTree || {})
   if(!objectKeys.length) {return (<></>)}
-  console.log(toJS(drawingTree) , 655)
-  return objectKeys.map((operation) => {
     
+  return objectKeys.map((operation) => {
     let value = drawingTree[operation].value;
     let mode = drawingTree[operation].mode ;
   
 
     let objectOrNot = !drawingTree[operation].scalar  // typeof value === 'object' && value !== null
+       let decideWhoRenderChildren = drawingTree[operation].renderChild
     const Component = modeToComponent[mode].Component
 
 
@@ -109,7 +115,7 @@ export const generateJSXForFunctions = (drawingTree = {}) => {
           drawingTree[operation]["ref"] = refMarker
         }
        }} >
-          {generateJSXForFunctions(value)  }
+          {!decideWhoRenderChildren &&  generateJSXForFunctions(value)  }
        </Component>
        </div>
        )
@@ -144,7 +150,7 @@ export function generateScalarFunctionsToRun(drawingTree){
   let runArray = []
   Object.keys(drawingTree || {}).forEach((funId) => {
     let fun = drawingTree[funId]
-    console.log(toJS(fun) , 147)
+    
     if(fun.scalar){
       runArray.push(fun)
     }else{
@@ -171,6 +177,7 @@ export function generateCodeForFunctions(drawingTree){
   }
 
  })
+
  
  return stringArray
 
@@ -181,14 +188,21 @@ export const spacePrettify = (lines) => {
   
   let spaceCounter = 0
   let newArrStrings = (lines || []).map((line) => {
-      if(line.includes("{")){
+      let openingCount = ((line || '').match(/{/g) || []).length
+      let closingCount = ((line || '').match(/}/g) || []).length
+      if(openingCount > closingCount){
           let string = generateSpaceString(spaceCounter)+line
           spaceCounter += 2
           return string
-      }else if(line.includes("}")){
+      }else if(openingCount < closingCount){
           spaceCounter -= 2
           return generateSpaceString(spaceCounter)+line
-      }else{
+      }else if(openingCount === closingCount && openingCount !== 0){
+          spaceCounter -= 2
+          let t =  generateSpaceString(spaceCounter)+line
+          spaceCounter += 2
+          return t
+      }else {
           return  generateSpaceString(spaceCounter)+line
       }
   })

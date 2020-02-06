@@ -18,8 +18,8 @@ export default class FunctionName extends Component {
     } else if ((containerTree.mode || "").startsWith("C_FC_")) {
       //let loopLimiter = containerTree.getMovementValue && containerTree.getMovementValue()
 
-      Object.keys(containerTree.value || {}).forEach(functionSyntax => {
-        let fun = containerTree.value[functionSyntax];
+      Object.keys(containerTree.__value || {}).forEach(functionSyntax => {
+        let fun = containerTree.__value[functionSyntax];
         if (fun.scalar) {
           flatMapArray.push(fun);
         } else if ((fun.mode || "").startsWith("C_FC_")) {
@@ -34,4 +34,8 @@ export default class FunctionName extends Component {
       return containerTree.deComposeScalarValues(containerTree);
     }
   };
+
+  static generateFunctionString(operation) {
+    return `${operation.mode}();\n`;
+  }
 }

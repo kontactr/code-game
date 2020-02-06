@@ -65,7 +65,9 @@ export default class GamePlay extends Component {
         </>)
       })
     }else{
-      return <>No Data To Parse</>
+      return <>
+      <pre>No data to parse</pre>
+      </>
     }
   }
 

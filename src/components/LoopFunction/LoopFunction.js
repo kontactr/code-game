@@ -93,7 +93,7 @@ class LoopFunction extends React.Component {
     let loopStringArray = this.generateLoopStartString(containerTree.id , loopLimiter || 1)
     
     
-          Object.keys(containerTree.value || {}).forEach((functionSyntax) => {
+        Object.keys(containerTree.value || {}).forEach((functionSyntax) => {
         let fun = containerTree.value[functionSyntax]
         if(fun.scalar){
           loopStringArray.push(fun.generateFunctionString())
@@ -105,9 +105,9 @@ class LoopFunction extends React.Component {
         }
       } )
       
-
-      
-
+      if(loopStringArray.length == 1){
+        loopStringArray.push("// No operation ;\n")
+      }
      loopStringArray.push(`}\n`)
      return loopStringArray
   }else{
