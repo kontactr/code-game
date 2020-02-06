@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "./FunctionName.css";
+import { toJS } from "mobx";
 
 export default class FunctionName extends Component {
   render() {
@@ -13,6 +14,8 @@ export default class FunctionName extends Component {
 
   static deComposeScalarValues = containerTree => {
     let flatMapArray = [];
+
+    console.log("HERE", toJS(containerTree), 17);
     if (containerTree.scalar) {
       return [containerTree];
     } else if ((containerTree.mode || "").startsWith("C_FC_")) {

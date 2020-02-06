@@ -9,8 +9,7 @@ class DragStore {
   dropDrawing = observable({});
 
   drop = (options = {}, sequence = [], __newId = getSequence()) => {
-    let temp = toJS(this.dropDrawing);
-    let parent = temp;
+    let parent = this.dropDrawing;
     (sequence || []).forEach(id => {
       parent = parent[id].value;
     });
@@ -21,8 +20,6 @@ class DragStore {
         ...options
       } || {}
     );
-
-    this.dropDrawing = temp;
   };
 
   dropDrawingPass = (func = () => {}) => {

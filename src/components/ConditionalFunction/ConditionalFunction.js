@@ -83,7 +83,7 @@ class ConditionalFunction extends React.Component {
   static composeValue = operation => {
     let a = getSequence()
     let b = getSequence()
-    return {
+    return observable({
       mode: "IF-ELSE",
       value: observable({
         [a] : {
@@ -101,7 +101,7 @@ class ConditionalFunction extends React.Component {
       renderChild: true,
       scalar: false,
       key: "IF-ELSE",
-    };
+    });
   };
 
  deComposeScalarValues = (containerTree) => {

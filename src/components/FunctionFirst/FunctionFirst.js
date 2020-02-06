@@ -5,6 +5,7 @@ import { generateJSXForFunctions, deleteModeToComponent, addModeToComponent } fr
 import { deleteButtonsToDrawer, addButtonsToDrawer } from "../../Utils/constants";
 import FunctionName from "./FunctionName/FunctionName"
 import { inject, observer } from "mobx-react";
+import { toJS } from "mobx";
 
 
 class FunctionFirst extends React.Component {
@@ -39,6 +40,8 @@ class FunctionFirst extends React.Component {
 
     const { dragStore = {} , operation } = this.props;
     const { addButtonsToDrawer = () => {} ,  } = dragStore
+
+    
 
     addModeToComponent({
       mode: "C_FC_" + this.id,

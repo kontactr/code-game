@@ -92,7 +92,7 @@ export const generateJSXForFunctions = (drawingTree = {}) => {
 
     if(objectOrNot){
        return (
-       <div className="close-container"  > 
+       <div className="close-container" key={drawingTree[operation].id || new Date()  } > 
          <Icon   className={"close-circle close-circle-object"} type="close-circle" onClick={(e) => {
            e.stopPropagation()
            e.preventDefault()
@@ -117,7 +117,7 @@ export const generateJSXForFunctions = (drawingTree = {}) => {
       
     }else{
       return (
-        <div className="close-container">
+        <div className="close-container" key={drawingTree[operation].id || new Date()  }>
           <Icon className={"close-circle"} type="close-circle" onClick={(e) => {
             e.stopPropagation()
             e.preventDefault()
