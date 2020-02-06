@@ -54,8 +54,10 @@ class FunctionFirst extends React.Component {
           key: "C_FC_" + this.id,
           scalar: false,
           renderChild: true,
+          parentId: operation.id,
           deComposeScalarValues: FunctionName.deComposeScalarValues,
-          generateFunctionString: FunctionName.generateFunctionString
+          generateFunctionString: FunctionName.generateFunctionString,
+          checkCyclic: FunctionName.checkCyclic
         }
       }
     })
@@ -154,6 +156,10 @@ class FunctionFirst extends React.Component {
  
  generateInternalFunctionString = (value) => {
    return `function C_FC_${this.id}() {\n`
+ }
+
+ checkCyclic = (operation) => {
+  return {id: operation.id , value: operation.value};
  }
 
 }

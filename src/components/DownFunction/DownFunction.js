@@ -39,6 +39,10 @@ class DownFunction extends React.Component {
   generateFunctionString = () => {
     return `moveBackward();\n`;
   };
+
+  checkCyclic = operation => {
+    return { id: operation.id, value: {} };
+  };
 }
 
 export default DownFunction;

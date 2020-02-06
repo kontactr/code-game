@@ -34,6 +34,10 @@ class RightFunction extends React.Component {
   generateFunctionString = () => {
     return `moveRight();\n`;
   };
+
+  checkCyclic = operation => {
+    return { id: operation.id, value: {} };
+  };
 }
 
 export default RightFunction;

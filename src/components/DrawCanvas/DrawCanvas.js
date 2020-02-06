@@ -1,12 +1,16 @@
 import React, { Component } from "react";
 import "./DrawCanvas.css";
 import { observer, inject } from "mobx-react";
-import { generateScalarFunctionsToRun } from "../FunctionsIndex/FunctionsIndex";
+import {
+  generateScalarFunctionsToRun,
+  checkCyclicDependency
+} from "../FunctionsIndex/FunctionsIndex";
 import {
   drawInitPlayer,
   performGameAnimation,
   restoreGrid
 } from "./CanavasManager";
+import { toJS } from "mobx";
 
 class DrawCanvas extends Component {
   state = {
@@ -61,7 +65,13 @@ class DrawCanvas extends Component {
 
         this.resetGame();
 
-        let functionsArray = generateScalarFunctionsToRun(dropDrawing || {});
+        console.log(toJS(dropDrawing), 65);
+
+        let cyclicTree = checkCyclicDependency(dropDrawing);
+
+        console.log(toJS(cyclicTree), 69);
+
+        /*let functionsArray = generateScalarFunctionsToRun(dropDrawing || {});
 
         performGameAnimation({
           ...playerStore,
@@ -70,7 +80,7 @@ class DrawCanvas extends Component {
           context: this.context,
           canvasHeight: 485,
           canvasWidth: 500
-        });
+        });*/
       }
     });
   };

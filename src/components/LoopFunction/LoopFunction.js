@@ -131,6 +131,10 @@ class LoopFunction extends React.Component {
    ]
  }
 
+ checkCyclic = (operation) =>  {
+   return {id: operation.id , value: operation.value};
+ }
+
 }
 
 export default LoopFunction;
