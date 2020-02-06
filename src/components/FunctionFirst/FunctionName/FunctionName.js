@@ -15,7 +15,6 @@ export default class FunctionName extends Component {
   static deComposeScalarValues = containerTree => {
     let flatMapArray = [];
 
-    console.log("HERE", toJS(containerTree), 17);
     if (containerTree.scalar) {
       return [containerTree];
     } else if ((containerTree.mode || "").startsWith("C_FC_")) {
@@ -41,4 +40,8 @@ export default class FunctionName extends Component {
   static generateFunctionString(operation) {
     return `${operation.mode}();\n`;
   }
+
+  static checkCyclic = operation => {
+    return { id: operation.id, value: { [operation.parentId]: {} } };
+  };
 }

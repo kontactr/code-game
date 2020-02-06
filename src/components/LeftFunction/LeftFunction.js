@@ -34,6 +34,10 @@ class LeftFunction extends React.Component {
   generateFunctionString = () => {
     return `moveLeft();\n`;
   };
+
+  checkCyclic = operation => {
+    return { id: operation.id, value: {} };
+  };
 }
 
 export default LeftFunction;

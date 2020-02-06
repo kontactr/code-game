@@ -28,7 +28,6 @@ class ConditionalFunction extends React.Component {
     
     const { __internalSequence = [] } = operation.value
 
-    console.log("HERE" , 31)
 
     return (
     <>
@@ -87,14 +86,20 @@ class ConditionalFunction extends React.Component {
       mode: "IF-ELSE",
       value: observable({
         [a] : {
+          id: a,
           value: observable({
-
-          })
+          }),
+          checkCyclic: (operation) => {
+            return {id: operation.id , value: operation.value }
+          }
         },
         [b] : {
+          id: b,
           value: observable({
-
-          })
+          }),
+          checkCyclic: (operation) => {
+            return {id: operation.id , value: operation.value }
+          }
         },
         __internalSequence: [a,b]
       }),
@@ -204,6 +209,19 @@ class ConditionalFunction extends React.Component {
 
  generateElseString = (value) => {
    return `} else { \n`
+ }
+
+ checkCyclic = (operation) => {
+   
+   return { id: operation.id , value: this.__generateValueForCheckCyclic(operation.value) }
+ }
+
+ __generateValueForCheckCyclic = (tree) => {
+   let value = tree.__internalSequence
+   return {
+     [value[0]] : tree[value[0]],
+     [value[1]] : tree[value[1]]
+   }
  }
 
 }

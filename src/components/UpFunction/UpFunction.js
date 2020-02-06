@@ -34,6 +34,10 @@ class UpFunction extends React.Component {
   generateFunctionString = () => {
     return `moveForward();\n`;
   };
+
+  checkCyclic = operation => {
+    return { id: operation.id, value: {} };
+  };
 }
 
 export default UpFunction;
