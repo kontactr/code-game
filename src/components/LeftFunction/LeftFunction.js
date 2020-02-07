@@ -35,8 +35,8 @@ class LeftFunction extends React.Component {
     return `moveLeft();\n`;
   };
 
-  checkCyclic = operation => {
-    return { id: operation.id, value: {} };
+  generateRaw = operation => {
+    return { id: operation.id, value: null };
   };
 }
 

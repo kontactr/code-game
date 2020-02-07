@@ -35,8 +35,8 @@ class RightFunction extends React.Component {
     return `moveRight();\n`;
   };
 
-  checkCyclic = operation => {
-    return { id: operation.id, value: {} };
+  generateRaw = operation => {
+    return { id: operation.id, value: null };
   };
 }
 

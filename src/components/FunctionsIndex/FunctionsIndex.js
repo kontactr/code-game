@@ -106,7 +106,7 @@ export const generateJSXForFunctions = (drawingTree = {}) => {
           drawingTree[operation]["deComposeScalarValues"] = refMarker.deComposeScalarValues
           drawingTree[operation]["generateFunctionString"] = refMarker.generateFunctionString
           drawingTree[operation]["deleteEffect"] = refMarker.deleteEffect
-          drawingTree[operation]["checkCyclic"] =  refMarker.checkCyclic
+          drawingTree[operation]["generateRaw"] =  refMarker.generateRaw
           drawingTree[operation]["ref"] = refMarker
         }
        }} >
@@ -131,7 +131,7 @@ export const generateJSXForFunctions = (drawingTree = {}) => {
           drawingTree[operation]["deComposeScalarValues"] = refMarker.deComposeScalarValues
           drawingTree[operation]["generateFunctionString"] = refMarker.generateFunctionString
           drawingTree[operation]["deleteEffect"] = refMarker.deleteEffect
-          drawingTree[operation]["checkCyclic"] =  refMarker.checkCyclic
+          drawingTree[operation]["generateRaw"] =  refMarker.generateRaw
           drawingTree[operation]["ref"] = refMarker
 
         }
@@ -213,35 +213,32 @@ const generateSpaceString = (number) => {
   return temp
 }
 
-export const checkCyclicDependency = (drawingTree , visitedValues = {} , level = 1) => {
-  let resultTree = {}
-  let cycleDetect = false
-  let objectKeys = Object.keys(drawingTree || {})
-  if(!objectKeys.length){
-    return [0 , cycleDetect]
+export const generateRawTree = (drawingTree , visitingTree = [] ) => {
+  if(!drawingTree) return null
+
+  let resulingTree = {}
+  let treeKeys = Object.keys( drawingTree || {}  );
+
+  (treeKeys || []).forEach((key) => {    
+    let operation = drawingTree[key]
+    let result = operation.generateRaw(operation)
+    if(visitingTree.includes(result.id)){
+      resulingTree[result.id] = null
+    }else{
+      visitingTree.push(result.id)
+      resulingTree[result.id] = generateRawTree(result.value , visitingTree.slice(0) )
+    }
+  })
+  if(treeKeys.length){
+    return resulingTree
   }else{
-    (objectKeys || []).forEach((operationKey) => {
-       let operation = drawingTree[operationKey] 
-            
-       if(!visitedValues[operationKey]){
-         let result = operation.checkCyclic(operation)
-         visitedValues[result.id] = {
-           level
-         }
-         const [ resTree , resCycle ] = checkCyclicDependency(result.value , visitedValues , level + 1)
-        resultTree[result.id] = resTree
-        cycleDetect = cycleDetect ||  resCycle
-       }else{
-         
-         if(Math.abs(visitedValues[operationKey].level - level) === 1 ){
-          resultTree[operationKey] = -2
-          cycleDetect = cycleDetect || false
-         }else{
-         resultTree[operationKey]= -1
-         cycleDetect = cycleDetect || true
-         }
-       }
-    } )
-    return [resultTree , cycleDetect]
+    return null
   }
 }
+
+export const hoisting = (drawingTree) => {
+  console.log(toJS(drawingTree));
+}
+
+
+

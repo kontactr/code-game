@@ -41,7 +41,16 @@ export default class FunctionName extends Component {
     return `${operation.mode}();\n`;
   }
 
-  static checkCyclic = operation => {
-    return { id: operation.id, value: { [operation.parentId]: {} } };
+  static generateRaw = operation => {
+    return {
+      id: operation.id,
+      value: {
+        [operation.parentId]: {
+          generateRaw: () => {
+            return { id: [operation.parentId], value: operation.__value };
+          }
+        }
+      }
+    };
   };
 }

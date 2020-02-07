@@ -3,7 +3,9 @@ import "./DrawCanvas.css";
 import { observer, inject } from "mobx-react";
 import {
   generateScalarFunctionsToRun,
-  checkCyclicDependency
+  generateRawDependency,
+  hoisting,
+  generateRawTree
 } from "../FunctionsIndex/FunctionsIndex";
 import {
   drawInitPlayer,
@@ -67,20 +69,22 @@ class DrawCanvas extends Component {
 
         console.log(toJS(dropDrawing), 65);
 
-        let cyclicTree = checkCyclicDependency(dropDrawing);
+        let cyclicTree = generateRawTree(dropDrawing);
 
         console.log(toJS(cyclicTree), 69);
 
-        /*let functionsArray = generateScalarFunctionsToRun(dropDrawing || {});
+        if (false && !cyclicTree[1]) {
+          let functionsArray = generateScalarFunctionsToRun(dropDrawing || {});
 
-        performGameAnimation({
-          ...playerStore,
-          functionScalarArray: functionsArray || [],
-          allImages,
-          context: this.context,
-          canvasHeight: 485,
-          canvasWidth: 500
-        });*/
+          performGameAnimation({
+            ...playerStore,
+            functionScalarArray: functionsArray || [],
+            allImages,
+            context: this.context,
+            canvasHeight: 485,
+            canvasWidth: 500
+          });
+        }
       }
     });
   };
