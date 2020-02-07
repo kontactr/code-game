@@ -35,8 +35,8 @@ class UpFunction extends React.Component {
     return `moveForward();\n`;
   };
 
-  checkCyclic = operation => {
-    return { id: operation.id, value: {} };
+  generateRaw = operation => {
+    return { id: operation.id, value: null };
   };
 }
 

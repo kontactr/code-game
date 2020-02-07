@@ -40,8 +40,8 @@ class DownFunction extends React.Component {
     return `moveBackward();\n`;
   };
 
-  checkCyclic = operation => {
-    return { id: operation.id, value: {} };
+  generateRaw = operation => {
+    return { id: operation.id, value: null };
   };
 }
 

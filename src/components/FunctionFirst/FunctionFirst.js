@@ -57,7 +57,7 @@ class FunctionFirst extends React.Component {
           parentId: operation.id,
           deComposeScalarValues: FunctionName.deComposeScalarValues,
           generateFunctionString: FunctionName.generateFunctionString,
-          checkCyclic: FunctionName.checkCyclic
+          generateRaw: FunctionName.generateRaw
         }
       }
     })
@@ -158,7 +158,7 @@ class FunctionFirst extends React.Component {
    return `function C_FC_${this.id}() {\n`
  }
 
- checkCyclic = (operation) => {
+ generateRaw = (operation) => {
   return {id: operation.id , value: operation.value};
  }
 

@@ -89,7 +89,7 @@ class ConditionalFunction extends React.Component {
           id: a,
           value: observable({
           }),
-          checkCyclic: (operation) => {
+          generateRaw: (operation) => {
             return {id: operation.id , value: operation.value }
           }
         },
@@ -97,7 +97,7 @@ class ConditionalFunction extends React.Component {
           id: b,
           value: observable({
           }),
-          checkCyclic: (operation) => {
+          generateRaw: (operation) => {
             return {id: operation.id , value: operation.value }
           }
         },
@@ -211,12 +211,12 @@ class ConditionalFunction extends React.Component {
    return `} else { \n`
  }
 
- checkCyclic = (operation) => {
+ generateRaw = (operation) => {
    
-   return { id: operation.id , value: this.__generateValueForCheckCyclic(operation.value) }
+   return { id: operation.id , value: this.__generateValueForgenerateRaw(operation.value) }
  }
 
- __generateValueForCheckCyclic = (tree) => {
+ __generateValueForgenerateRaw = (tree) => {
    let value = tree.__internalSequence
    return {
      [value[0]] : tree[value[0]],
