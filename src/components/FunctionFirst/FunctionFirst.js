@@ -55,6 +55,7 @@ class FunctionFirst extends React.Component {
           scalar: false,
           renderChild: true,
           parentId: operation.id,
+          __type: "CALL",
           deComposeScalarValues: FunctionName.deComposeScalarValues,
           generateFunctionString: FunctionName.generateFunctionString,
           generateRaw: FunctionName.generateRaw
@@ -109,6 +110,7 @@ class FunctionFirst extends React.Component {
       value: {
       },
       scalar: false,
+      __type: "DEFINATION",
       key: "FUNCTION",
       
     };
@@ -160,6 +162,40 @@ class FunctionFirst extends React.Component {
 
  generateRaw = (operation) => {
   return {id: operation.id , value: operation.value};
+ }
+
+ static customValidation = (drawingTree , definations = []) => {
+   let result = false
+   let scope = definations.concat( [] )
+   let objectKeys = Object.keys(drawingTree || {})
+   for(let key of objectKeys){
+     if(drawingTree[key].__type === "DEFINATION"){
+       scope.push(drawingTree[key].id)
+     }else if(drawingTree[key].__type === "CALL"){
+       if(scope.includes(drawingTree[key].parentId)){
+          // pass operation
+       }else{
+          result = result || true
+       }
+     }
+     if(result) return result
+   }
+   
+
+   for(let key of objectKeys){
+      if(drawingTree[key].scalar){
+        // no op
+      }else if(drawingTree[key].__type === "CALL"){
+        // no op
+      }else{
+        let clonedScope = scope.splice(0)
+        result = result || FunctionFirst.customValidation(drawingTree[key].value , clonedScope);
+      }
+      if(result) return result
+   }
+
+   return result
+   
  }
 
 }

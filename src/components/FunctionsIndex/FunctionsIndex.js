@@ -34,7 +34,7 @@ const modeToComponent =  ({
   LEFT: {
     mode: "LEFT",
     Component: LeftFunction,
-    composeValue: LeftFunction.composeValue
+    composeValue: LeftFunction.composeValue,
   },
   RIGHT: {
     mode: "RIGHT",
@@ -44,7 +44,8 @@ const modeToComponent =  ({
   FUNCTION: {
     mode: "FUNCTION",
     Component: FunctionFirst,
-    composeValue: FunctionFirst.composeValue
+    composeValue: FunctionFirst.composeValue,
+    customValidation: FunctionFirst.customValidation
   },
 "IF-ELSE": {
     mode: "IF-ELSE",
@@ -237,7 +238,41 @@ export const generateRawTree = (drawingTree , visitingTree = [] ) => {
 }
 
 export const hoisting = (drawingTree) => {
-  console.log(toJS(drawingTree));
+    console.log(drawingTree , 241)  
+}
+
+export const checkCycle = (drawingTree = {} , visitedValues = []) => {
+  let result = false
+  
+  for (let key of Object.keys(drawingTree || {})){
+
+    let value = drawingTree[key]
+    let clonedArray = visitedValues.slice(0)
+    if(value){
+      if(clonedArray.includes(key)){
+        result = result || true
+        return result
+      }else{
+        clonedArray.push(key)
+       result = result || checkCycle(value , clonedArray.slice(0))
+      }
+    }
+  }
+  return result
+}
+
+export const checkStructureBasedOnComponents = (drawingTree) => {
+    let keys = Object.keys(modeToComponent || {})
+    let result = false
+    for (let key of keys){
+        if (modeToComponent[key].customValidation){
+          result = result || modeToComponent[key].customValidation(drawingTree)
+          if (result){
+            return result
+          }
+        }
+    }
+    return result
 }
 
 

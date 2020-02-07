@@ -5,7 +5,9 @@ import {
   generateScalarFunctionsToRun,
   generateRawDependency,
   hoisting,
-  generateRawTree
+  generateRawTree,
+  checkCycle,
+  checkStructureBasedOnComponents
 } from "../FunctionsIndex/FunctionsIndex";
 import {
   drawInitPlayer,
@@ -61,9 +63,14 @@ class DrawCanvas extends Component {
         const {
           canvasStore = {},
           playerStore = {},
-          dragStore = {}
+          dragStore = {},
+          progressStore = {}
         } = this.props;
         const { dropDrawing = {} } = dragStore;
+
+        const { toggleProgressDisplay } = progressStore;
+
+        //toggleProgressDisplay();
 
         this.resetGame();
 
@@ -72,6 +79,17 @@ class DrawCanvas extends Component {
         let cyclicTree = generateRawTree(dropDrawing);
 
         console.log(toJS(cyclicTree), 69);
+
+        let checkCyclicTreeForCycle = checkCycle(cyclicTree);
+
+        console.log(checkCyclicTreeForCycle, 84444);
+
+        if (!checkCyclicTreeForCycle) {
+          let allStructureValidations = checkStructureBasedOnComponents(
+            dropDrawing
+          );
+          console.log(allStructureValidations, 89);
+        }
 
         if (false && !cyclicTree[1]) {
           let functionsArray = generateScalarFunctionsToRun(dropDrawing || {});
@@ -90,6 +108,9 @@ class DrawCanvas extends Component {
   };
 }
 
-export default inject("canvasStore", "playerStore", "dragStore")(
-  observer(DrawCanvas)
-);
+export default inject(
+  "canvasStore",
+  "playerStore",
+  "dragStore",
+  "progressStore"
+)(observer(DrawCanvas));
