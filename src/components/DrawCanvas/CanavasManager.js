@@ -354,6 +354,33 @@ export const playerSideCheckAndChange = (
   setterSideFunction(nextMoveSide);
 };
 
+export const setCurrentUserPosition = (
+  context,
+  side,
+  allImages,
+  XValue,
+  YValue
+) => {
+  return new Promise((res, rej) => {
+    try {
+      let image = {
+        B: allImages["wp_back"],
+        F: allImages["wp_front"],
+        R: allImages["wp_right"],
+        L: allImages["wp_left"]
+      };
+
+      context.save();
+      context.scale(0.11, 0.11);
+      context.drawImage(image[side], XValue, YValue);
+      context.restore();
+      res();
+    } catch (err) {
+      rej();
+    }
+  });
+};
+
 export const restoreGrid = (context, allImages) => {
   return new Promise((resolve, reject) => {
     if (context && allImages) {
@@ -389,7 +416,7 @@ export const performGameAnimation = animationSettings => {
     functionScalarArray = []
   } = animationSettings;
 
-  functionScalarArray.reduce((current, functionToRun) => {
+  return functionScalarArray.reduce((current, functionToRun) => {
     return current.then(() => {
       let currentPosition = getCurrentPosition();
       let currentSide = getCurrentSide();

@@ -12,7 +12,8 @@ import {
 import {
   drawInitPlayer,
   performGameAnimation,
-  restoreGrid
+  restoreGrid,
+  setCurrentUserPosition
 } from "./CanavasManager";
 import { toJS } from "mobx";
 import { STATUSES_PERCENT, STATUSES } from "../../Utils/constants";
@@ -206,11 +207,27 @@ class DrawCanvas extends Component {
             context: this.context,
             canvasHeight: 485,
             canvasWidth: 500
+          }).then(res => {
+            const {
+              currentSide = "B",
+              currentPosition
+            } = this.props.playerStore;
+            let xValue = currentPosition.x * currentPosition.defaultXModifier;
+            let yValue = currentPosition.y * currentPosition.defaultYModifier;
+            setCurrentUserPosition(
+              this.context,
+              currentSide,
+              allImages,
+              xValue,
+              yValue
+            );
           });
         });
       } else {
         setGamePlayFunction(() => {});
       }
+    } else {
+      setGamePlayFunction(() => {});
     }
   };
 }
