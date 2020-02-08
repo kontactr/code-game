@@ -15,6 +15,7 @@ import {
   restoreGrid
 } from "./CanavasManager";
 import { toJS } from "mobx";
+import { STATUSES_PERCENT, STATUSES } from "../../Utils/constants";
 
 class DrawCanvas extends Component {
   state = {
@@ -59,52 +60,148 @@ class DrawCanvas extends Component {
     initUser({
       currentSide: "B",
       currentPosition,
-      registerGameStartCallback: () => {
-        const {
-          canvasStore = {},
-          playerStore = {},
-          dragStore = {},
-          progressStore = {}
-        } = this.props;
-        const { dropDrawing = {} } = dragStore;
+      registerGameStartCallback: this.registerGameStartCallback
+    });
+  };
 
-        const { toggleProgressDisplay } = progressStore;
+  registerGameStartCallback = async () => {
+    const {
+      canvasStore = {},
+      playerStore = {},
+      dragStore = {},
+      progressStore = {}
+    } = this.props;
 
-        //toggleProgressDisplay();
+    const { images = [] } = canvasStore;
+    const { dropDrawing = {} } = dragStore;
+    const { toggleProgressDisplay, changeState = () => {} } = progressStore;
 
-        this.resetGame();
+    let allImages = await images;
+    let overallProgress = true;
+    let cyclicTree = {};
+    let checkCyclicTreeForCycle = false;
+    let scopeError = false;
+    let functionsArray = [];
 
-        console.log(toJS(dropDrawing), 65);
+    toggleProgressDisplay();
 
-        let cyclicTree = generateRawTree(dropDrawing);
+    if (overallProgress) {
+      try {
+        changeState("reset", STATUSES.ACTIVE, 100);
+        await this.resetGame();
+        changeState("reset", STATUSES.SUCCESS, 100);
+      } catch (e) {
+        overallProgress = false;
+        changeState("reset", STATUSES.EXCEPTION, 100);
+      }
+    } else {
+      overallProgress = false;
+      changeState("reset", STATUSES.EXCEPTION, 100);
+    }
 
+    if (overallProgress) {
+      changeState("fetchTree", STATUSES.ACTIVE, 100);
+      if (dropDrawing !== undefined) {
+        changeState("fetchTree", STATUSES.SUCCESS, 100);
+      } else {
+        changeState("fetchTree", STATUSES.EXCEPTION, 100);
+      }
+    } else {
+      overallProgress = false;
+      changeState("fetchTree", STATUSES.EXCEPTION, 100);
+    }
+
+    if (overallProgress) {
+      try {
+        changeState("rawTree", STATUSES.ACTIVE, 100);
+        cyclicTree = generateRawTree(dropDrawing);
         console.log(toJS(cyclicTree), 69);
+        changeState("rawTree", STATUSES.SUCCESS, 100);
+      } catch (e) {
+        cyclicTree = {};
+        overallProgress = false;
+        changeState("rawTree", STATUSES.EXCEPTION, 100);
+      }
+    } else {
+      cyclicTree = {};
+      overallProgress = false;
+      changeState("rawTree", STATUSES.EXCEPTION, 100);
+    }
 
-        let checkCyclicTreeForCycle = checkCycle(cyclicTree);
-
+    if (overallProgress) {
+      try {
+        changeState("cycleCheck", STATUSES.ACTIVE, 100);
+        checkCyclicTreeForCycle = checkCycle(cyclicTree);
         console.log(checkCyclicTreeForCycle, 84444);
 
-        if (!checkCyclicTreeForCycle) {
-          let allStructureValidations = checkStructureBasedOnComponents(
-            dropDrawing
-          );
-          console.log(allStructureValidations, 89);
+        if (checkCyclicTreeForCycle) {
+          changeState("cycleCheck", STATUSES.EXCEPTION, 100);
+          overallProgress = false;
+        } else {
+          changeState("cycleCheck", STATUSES.SUCCESS, 100);
         }
-
-        if (false && !cyclicTree[1]) {
-          let functionsArray = generateScalarFunctionsToRun(dropDrawing || {});
-
-          performGameAnimation({
-            ...playerStore,
-            functionScalarArray: functionsArray || [],
-            allImages,
-            context: this.context,
-            canvasHeight: 485,
-            canvasWidth: 500
-          });
-        }
+      } catch (e) {
+        overallProgress = false;
+        changeState("cycleCheck", STATUSES.EXCEPTION, 100);
       }
-    });
+    } else {
+      overallProgress = false;
+      changeState("cycleCheck", STATUSES.EXCEPTION, 100);
+    }
+
+    if (overallProgress) {
+      try {
+        changeState("scopeCheck", STATUSES.ACTIVE, 100);
+        scopeError = checkStructureBasedOnComponents(dropDrawing);
+        console.log(scopeError, 89);
+
+        if (scopeError) {
+          changeState("scopeCheck", STATUSES.EXCEPTION, 100);
+          overallProgress = false;
+        } else {
+          changeState("scopeCheck", STATUSES.SUCCESS, 100);
+        }
+      } catch (e) {
+        overallProgress = false;
+        changeState("scopeCheck", STATUSES.EXCEPTION, 100);
+      }
+    } else {
+      overallProgress = false;
+      changeState("scopeCheck", STATUSES.EXCEPTION, 100);
+    }
+
+    if (overallProgress) {
+      try {
+        changeState("convertScalar", STATUSES.ACTIVE, 100);
+        functionsArray = generateScalarFunctionsToRun(dropDrawing || {});
+        console.log(functionsArray, 89999);
+
+        if (functionsArray === undefined) {
+          changeState("convertScalar", STATUSES.EXCEPTION, 100);
+          overallProgress = false;
+        } else {
+          changeState("convertScalar", STATUSES.SUCCESS, 100);
+        }
+      } catch (e) {
+        overallProgress = false;
+        changeState("convertScalar", STATUSES.EXCEPTION, 100);
+      }
+    } else {
+      overallProgress = false;
+      changeState("convertScalar", STATUSES.EXCEPTION, 100);
+    }
+
+    if (overallProgress) {
+      functionsArray.length &&
+        performGameAnimation({
+          ...playerStore,
+          functionScalarArray: functionsArray || [],
+          allImages,
+          context: this.context,
+          canvasHeight: 485,
+          canvasWidth: 500
+        });
+    }
   };
 }
 

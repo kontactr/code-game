@@ -167,6 +167,8 @@ class FunctionFirst extends React.Component {
  static customValidation = (drawingTree , definations = []) => {
    let result = false
    let scope = definations.concat( [] )
+   
+   
    let objectKeys = Object.keys(drawingTree || {})
    for(let key of objectKeys){
      if(drawingTree[key].__type === "DEFINATION"){
@@ -183,12 +185,18 @@ class FunctionFirst extends React.Component {
    
 
    for(let key of objectKeys){
-      if(drawingTree[key].scalar){
-        // no op
+   
+
+     //let resultCompose = drawingTree[key].generateRaw(drawingTree[key])
+      if(drawingTree[key].scalar){ // we can direct use scalar if we don't want to use generateRaw values
+        // no op                // just remove generate raw call and replace !resultCompose.value with
+                                // drawingTree[key].scalar
       }else if(drawingTree[key].__type === "CALL"){
         // no op
       }else{
-        let clonedScope = scope.splice(0)
+        
+        let clonedScope = scope.slice(0)
+        
         result = result || FunctionFirst.customValidation(drawingTree[key].value , clonedScope);
       }
       if(result) return result

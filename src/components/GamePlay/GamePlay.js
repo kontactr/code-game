@@ -4,6 +4,8 @@ import  images from '../../Images'
 import "./GamePlay.css";
 import { spacePrettify } from "../FunctionsIndex/FunctionsIndex";
 import { observer , inject } from 'mobx-react'
+import { toJS } from "mobx";
+import { STATE_DISPLAY_NAMES } from "../../Utils/constants";
 
 const { htmlCoding = "" } = images || {}
 const { TabPane } = Tabs;
@@ -14,7 +16,7 @@ class GamePlay extends Component {
 
     const { progressModalDisplay } = this.props.progressStore
 
-    console.log(progressModalDisplay , 17)
+    
     
     return (
       <>
@@ -79,24 +81,24 @@ class GamePlay extends Component {
 
   generateCodeCompileProgressModal = () => {
 
-    const { toggleProgressDisplay , progressModalTitle ,progressModalDisplay  } = this.props.progressStore;
+    const { toggleProgressDisplay , progressModalTitle ,progressModalDisplay , steps = {}  } = this.props.progressStore;
     
     return (<Modal
           title={progressModalTitle}
           visible={progressModalDisplay}
           onOk={toggleProgressDisplay}
           onCancel={toggleProgressDisplay}
-          className={"modal-container"}
-          
+          className={"modal-container"}          
         >
-          H
-          <Progress  percent={70} status="exception" />
-          E
-           <Progress percent={70} status="success" />
-           L
-            <Progress  status="normal" />
-            L
-            <Progress percent={100} showInfo={false} status="active" />
+          {Object.keys(steps || {}).map((step) => {
+              let stepValues = steps[step]
+              
+              return (
+              <div key={step}>
+              {STATE_DISPLAY_NAMES[step]}
+              <Progress  percent={stepValues.progress} status={stepValues.status} />
+              </div>)}) 
+          }
         </Modal>)
   }
 }
