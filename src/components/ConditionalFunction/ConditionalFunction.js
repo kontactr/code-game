@@ -218,10 +218,9 @@ class ConditionalFunction extends React.Component {
 
  __generateValueForgenerateRaw = (tree) => {
    let value = tree.__internalSequence
-   return {
-     [value[0]] : tree[value[0]],
-     [value[1]] : tree[value[1]]
-   }
+   const { conditionalState } = this.state
+   return Boolean(Number(conditionalState)) && { [value[0]] : tree[value[0]] } || { [value[1]] : tree[value[1]] }
+   
  }
 
 }

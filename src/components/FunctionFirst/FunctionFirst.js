@@ -160,8 +160,8 @@ class FunctionFirst extends React.Component {
    return `function C_FC_${this.id}() {\n`
  }
 
- generateRaw = (operation) => {
-  return {id: operation.id , value: operation.value};
+ generateRaw = (operation , context) => {
+    return {id: operation.id , value: operation.value};
  }
 
  static customValidation = (drawingTree , definations = []) => {
@@ -187,17 +187,16 @@ class FunctionFirst extends React.Component {
    for(let key of objectKeys){
    
 
-     //let resultCompose = drawingTree[key].generateRaw(drawingTree[key])
-      if(drawingTree[key].scalar){ // we can direct use scalar if we don't want to use generateRaw values
+     let resultCompose = drawingTree[key].generateRaw(drawingTree[key])
+      if(!resultCompose.value      /*drawingTree[key].scalar*/){ // we can direct use scalar if we don't want to use generateRaw values
         // no op                // just remove generate raw call and replace !resultCompose.value with
                                 // drawingTree[key].scalar
-      }else if(drawingTree[key].__type === "CALL"){
+      }else if(resultCompose.__type === "CALL"){
         // no op
       }else{
         
         let clonedScope = scope.slice(0)
-        
-        result = result || FunctionFirst.customValidation(drawingTree[key].value , clonedScope);
+        result = result || FunctionFirst.customValidation(resultCompose.value , clonedScope);
       }
       if(result) return result
    }
