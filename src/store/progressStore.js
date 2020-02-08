@@ -1,13 +1,19 @@
-import { decorate, observable } from "mobx";
+import { decorate, observable, action } from "mobx";
 import { STATUSES, STATUSES_PERCENT } from "../Utils/constants";
 
 class ProgressStore {
   progressModalTitle = "Code Compilation";
   progressModalDisplay = false;
 
+  gamePlayFunction = () => {};
+
   constructor() {
     this.resetSteps();
   }
+
+  setGamePlayFunction = (gamePlayFunction = () => {}) => {
+    this.gamePlayFunction = gamePlayFunction;
+  };
 
   toggleProgressDisplay = () => {
     this.progressModalDisplay = !this.progressModalDisplay;
@@ -40,7 +46,9 @@ class ProgressStore {
 
 decorate(ProgressStore, {
   progressModalTitle: observable,
-  progressModalDisplay: observable
+  progressModalDisplay: observable,
+  setGamePlayFunction: action,
+  gamePlayFunction: observable
 });
 
 export default new ProgressStore();

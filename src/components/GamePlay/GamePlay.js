@@ -81,12 +81,15 @@ class GamePlay extends Component {
 
   generateCodeCompileProgressModal = () => {
 
-    const { toggleProgressDisplay , progressModalTitle ,progressModalDisplay , steps = {}  } = this.props.progressStore;
+    const { toggleProgressDisplay , progressModalTitle ,progressModalDisplay , steps = {} , gamePlayFunction = () => {}  } = this.props.progressStore;
     
     return (<Modal
           title={progressModalTitle}
           visible={progressModalDisplay}
-          onOk={toggleProgressDisplay}
+          onOk={() => {
+            toggleProgressDisplay()
+            gamePlayFunction()
+          }}
           onCancel={toggleProgressDisplay}
           className={"modal-container"}          
         >

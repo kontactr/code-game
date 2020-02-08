@@ -161,10 +161,18 @@ class FunctionFirst extends React.Component {
  }
 
  generateRaw = (operation , context) => {
-    return {id: operation.id , value: operation.value};
+  
+  
+  if(context && context.__fncInternal === "CALL"){
+    context.__fncInternal = undefined
+    return {id: operation.id , value: {}};
+   }else{
+     return {id: operation.id , value: {}};
+   }
+    
  }
 
- static customValidation = (drawingTree , definations = []) => {
+ static customValidation = (drawingTree , definations = [], visited = {}) => {
    let result = false
    let scope = definations.concat( [] )
    
@@ -187,16 +195,19 @@ class FunctionFirst extends React.Component {
    for(let key of objectKeys){
    
 
-     let resultCompose = drawingTree[key].generateRaw(drawingTree[key])
+     let resultCompose = drawingTree[key].generateRaw(drawingTree[key] , {__condition: "BOTH"} )
       if(!resultCompose.value      /*drawingTree[key].scalar*/){ // we can direct use scalar if we don't want to use generateRaw values
         // no op                // just remove generate raw call and replace !resultCompose.value with
                                 // drawingTree[key].scalar
       }else if(resultCompose.__type === "CALL"){
         // no op
       }else{
+        if(!visited[key]){
+          let clonedScope = scope.slice(0)
+          visited[key] = true
+        result = result || FunctionFirst.customValidation(resultCompose.value , clonedScope , visited);
+        }
         
-        let clonedScope = scope.slice(0)
-        result = result || FunctionFirst.customValidation(resultCompose.value , clonedScope);
       }
       if(result) return result
    }

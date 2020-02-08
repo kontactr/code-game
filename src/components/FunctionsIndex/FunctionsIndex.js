@@ -216,6 +216,7 @@ const generateSpaceString = (number) => {
 }
 
 export const generateRawTree = (drawingTree , visitingTree = [] , context = {}  ) => {
+  
   if(!drawingTree) return null
 
   let resulingTree = {}
@@ -224,6 +225,7 @@ export const generateRawTree = (drawingTree , visitingTree = [] , context = {}  
   (treeKeys || []).forEach((key) => {    
     let operation = drawingTree[key]
     //let clonedContext = toJS(context)
+    
     let result = operation.generateRaw(operation , context)
     if(visitingTree.includes(result.id)){
       resulingTree[result.id] = null
@@ -231,6 +233,7 @@ export const generateRawTree = (drawingTree , visitingTree = [] , context = {}  
       visitingTree.push(result.id)
       resulingTree[result.id] = generateRawTree(result.value , visitingTree.slice(0) , context)
     }
+    
   })
   if(treeKeys.length){
     return resulingTree
@@ -250,7 +253,7 @@ export const checkCycle = (drawingTree = {} , visitedValues = []) => {
 
     let value = drawingTree[key]
     let clonedArray = visitedValues.slice(0)
-    console.log(key , visitedValues , 252)
+    
     if(value){
       if(clonedArray.includes(key)){
         result = result || true

@@ -41,7 +41,8 @@ export default class FunctionName extends Component {
     return `${operation.mode}();\n`;
   }
 
-  static generateRaw = operation => {
+  static generateRaw = (operation, context) => {
+    context.__fncInternal = "CALL";
     return {
       id: operation.id,
       value: {

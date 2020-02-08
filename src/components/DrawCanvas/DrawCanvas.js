@@ -56,6 +56,7 @@ class DrawCanvas extends Component {
     const { images = [] } = canvasStore;
     const { initUser = () => {} } = playerStore || {};
     let allImages = await images;
+    restoreGrid(this.context, allImages);
     let currentPosition = drawInitPlayer(this.context, allImages["wp_back"]);
     initUser({
       currentSide: "B",
@@ -74,7 +75,11 @@ class DrawCanvas extends Component {
 
     const { images = [] } = canvasStore;
     const { dropDrawing = {} } = dragStore;
-    const { toggleProgressDisplay, changeState = () => {} } = progressStore;
+    const {
+      toggleProgressDisplay,
+      changeState = () => {},
+      setGamePlayFunction = () => {}
+    } = progressStore;
 
     let allImages = await images;
     let overallProgress = true;
@@ -115,7 +120,6 @@ class DrawCanvas extends Component {
       try {
         changeState("rawTree", STATUSES.ACTIVE, 100);
         cyclicTree = generateRawTree(dropDrawing);
-        console.log(toJS(cyclicTree), 69);
         changeState("rawTree", STATUSES.SUCCESS, 100);
       } catch (e) {
         cyclicTree = {};
@@ -162,6 +166,7 @@ class DrawCanvas extends Component {
           changeState("scopeCheck", STATUSES.SUCCESS, 100);
         }
       } catch (e) {
+        console.log(e, 166);
         overallProgress = false;
         changeState("scopeCheck", STATUSES.EXCEPTION, 100);
       }
@@ -174,7 +179,6 @@ class DrawCanvas extends Component {
       try {
         changeState("convertScalar", STATUSES.ACTIVE, 100);
         functionsArray = generateScalarFunctionsToRun(dropDrawing || {});
-        console.log(functionsArray, 89999);
 
         if (functionsArray === undefined) {
           changeState("convertScalar", STATUSES.EXCEPTION, 100);
@@ -183,6 +187,7 @@ class DrawCanvas extends Component {
           changeState("convertScalar", STATUSES.SUCCESS, 100);
         }
       } catch (e) {
+        console.log(e);
         overallProgress = false;
         changeState("convertScalar", STATUSES.EXCEPTION, 100);
       }
@@ -192,15 +197,20 @@ class DrawCanvas extends Component {
     }
 
     if (overallProgress) {
-      functionsArray.length &&
-        performGameAnimation({
-          ...playerStore,
-          functionScalarArray: functionsArray || [],
-          allImages,
-          context: this.context,
-          canvasHeight: 485,
-          canvasWidth: 500
+      if (functionsArray.length) {
+        setGamePlayFunction(() => {
+          performGameAnimation({
+            ...playerStore,
+            functionScalarArray: functionsArray || [],
+            allImages,
+            context: this.context,
+            canvasHeight: 485,
+            canvasWidth: 500
+          });
         });
+      } else {
+        setGamePlayFunction(() => {});
+      }
     }
   };
 }
