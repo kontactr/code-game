@@ -8,7 +8,6 @@ import { inject, observer } from "mobx-react";
 import { toJS } from "mobx";
 
 
-
 class FunctionFirst extends React.Component {
 
   state = {
@@ -42,17 +41,24 @@ class FunctionFirst extends React.Component {
     const { dragStore = {} , operation } = this.props;
     const { addButtonsToDrawer = () => {} ,  } = dragStore
 
+    
+
     addModeToComponent({
       mode: "C_FC_" + this.id,
       Component: FunctionName,
       composeValue: (...rest) => {
         return {
           mode: "C_FC_" + this.id,
-          value: operation.value,
+          value: "C_FC_" + this.id,
+          __value: operation.value,
           key: "C_FC_" + this.id,
           scalar: false,
           renderChild: true,
-          deComposeScalarValues: FunctionName.deComposeScalarValues
+          parentId: operation.id,
+          __type: "CALL",
+          deComposeScalarValues: FunctionName.deComposeScalarValues,
+          generateFunctionString: FunctionName.generateFunctionString,
+          generateRaw: FunctionName.generateRaw
         }
       }
     })
@@ -104,6 +110,7 @@ class FunctionFirst extends React.Component {
       value: {
       },
       scalar: false,
+      __type: "DEFINATION",
       key: "FUNCTION",
       
     };
@@ -133,6 +140,11 @@ class FunctionFirst extends React.Component {
          loopStringArray =  loopStringArray.concat(fun.generateFunctionString(fun))
         }
       } )
+
+      if(loopStringArray.length === 1){
+        loopStringArray.push("// No operation ;\n")
+      }
+
      loopStringArray.push(`}\n`)
      return loopStringArray
   }else{
@@ -146,6 +158,51 @@ class FunctionFirst extends React.Component {
  
  generateInternalFunctionString = (value) => {
    return `function C_FC_${this.id}() {\n`
+ }
+
+ generateRaw = (operation , context) => {
+    return {id: operation.id , value: operation.value};
+ }
+
+ static customValidation = (drawingTree , definations = []) => {
+   let result = false
+   let scope = definations.concat( [] )
+   
+   
+   let objectKeys = Object.keys(drawingTree || {})
+   for(let key of objectKeys){
+     if(drawingTree[key].__type === "DEFINATION"){
+       scope.push(drawingTree[key].id)
+     }else if(drawingTree[key].__type === "CALL"){
+       if(scope.includes(drawingTree[key].parentId)){
+          // pass operation
+       }else{
+          result = result || true
+       }
+     }
+     if(result) return result
+   }
+   
+
+   for(let key of objectKeys){
+   
+
+     let resultCompose = drawingTree[key].generateRaw(drawingTree[key])
+      if(!resultCompose.value      /*drawingTree[key].scalar*/){ // we can direct use scalar if we don't want to use generateRaw values
+        // no op                // just remove generate raw call and replace !resultCompose.value with
+                                // drawingTree[key].scalar
+      }else if(resultCompose.__type === "CALL"){
+        // no op
+      }else{
+        
+        let clonedScope = scope.slice(0)
+        result = result || FunctionFirst.customValidation(resultCompose.value , clonedScope);
+      }
+      if(result) return result
+   }
+
+   return result
+   
  }
 
 }

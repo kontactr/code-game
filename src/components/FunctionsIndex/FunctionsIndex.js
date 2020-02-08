@@ -8,7 +8,6 @@ import FunctionFirst from '../FunctionFirst/FunctionFirst'
 import ConditionalFunction from '../ConditionalFunction/ConditionalFunction'
 import "./FunctionIndex.css"
 import { Icon } from "antd";
-import { toJS, observable } from "mobx";
 
 
 const modeToComponent =  ({
@@ -35,7 +34,7 @@ const modeToComponent =  ({
   LEFT: {
     mode: "LEFT",
     Component: LeftFunction,
-    composeValue: LeftFunction.composeValue
+    composeValue: LeftFunction.composeValue,
   },
   RIGHT: {
     mode: "RIGHT",
@@ -45,9 +44,10 @@ const modeToComponent =  ({
   FUNCTION: {
     mode: "FUNCTION",
     Component: FunctionFirst,
-    composeValue: FunctionFirst.composeValue
+    composeValue: FunctionFirst.composeValue,
+    customValidation: FunctionFirst.customValidation
   },
-  "IF-ELSE": {
+"IF-ELSE": {
     mode: "IF-ELSE",
     Component: ConditionalFunction,
     composeValue: ConditionalFunction.composeValue
@@ -71,7 +71,7 @@ export const deleteModeToComponent = (mode) => {
 
 
 export const generateComposeValue = (mode, pathIds, drawingData) => {
-  console.log(toJS(mode) , toJS(modeToComponent)  , 58)
+  
   return modeToComponent[mode].composeValue(mode , pathIds , drawingData);
 }
 
@@ -79,21 +79,20 @@ export const generateComposeValue = (mode, pathIds, drawingData) => {
 export const generateJSXForFunctions = (drawingTree = {}) => {
   let objectKeys = Object.keys(drawingTree || {})
   if(!objectKeys.length) {return (<></>)}
-
-  return objectKeys.map((operation) => {
     
+  return objectKeys.map((operation) => {
     let value = drawingTree[operation].value;
     let mode = drawingTree[operation].mode ;
   
 
     let objectOrNot = !drawingTree[operation].scalar  // typeof value === 'object' && value !== null
-    let decideWhoRenderChildren = drawingTree[operation].renderChild
+       let decideWhoRenderChildren = drawingTree[operation].renderChild
     const Component = modeToComponent[mode].Component
 
 
     if(objectOrNot){
        return (
-       <div className="close-container"  > 
+       <div className="close-container" key={drawingTree[operation].id || new Date()  } > 
          <Icon   className={"close-circle close-circle-object"} type="close-circle" onClick={(e) => {
            e.stopPropagation()
            e.preventDefault()
@@ -108,17 +107,18 @@ export const generateJSXForFunctions = (drawingTree = {}) => {
           drawingTree[operation]["deComposeScalarValues"] = refMarker.deComposeScalarValues
           drawingTree[operation]["generateFunctionString"] = refMarker.generateFunctionString
           drawingTree[operation]["deleteEffect"] = refMarker.deleteEffect
+          drawingTree[operation]["generateRaw"] =  refMarker.generateRaw
           drawingTree[operation]["ref"] = refMarker
         }
        }} >
-          { !decideWhoRenderChildren  &&  generateJSXForFunctions(value)  }
+          {!decideWhoRenderChildren &&  generateJSXForFunctions(value)  }
        </Component>
        </div>
        )
       
     }else{
       return (
-        <div className="close-container">
+        <div className="close-container" key={drawingTree[operation].id || new Date()  }>
           <Icon className={"close-circle"} type="close-circle" onClick={(e) => {
             e.stopPropagation()
             e.preventDefault()
@@ -132,6 +132,7 @@ export const generateJSXForFunctions = (drawingTree = {}) => {
           drawingTree[operation]["deComposeScalarValues"] = refMarker.deComposeScalarValues
           drawingTree[operation]["generateFunctionString"] = refMarker.generateFunctionString
           drawingTree[operation]["deleteEffect"] = refMarker.deleteEffect
+          drawingTree[operation]["generateRaw"] =  refMarker.generateRaw
           drawingTree[operation]["ref"] = refMarker
 
         }
@@ -146,7 +147,7 @@ export function generateScalarFunctionsToRun(drawingTree){
   let runArray = []
   Object.keys(drawingTree || {}).forEach((funId) => {
     let fun = drawingTree[funId]
-    console.log(toJS(fun) , 147)
+    
     if(fun.scalar){
       runArray.push(fun)
     }else{
@@ -173,6 +174,7 @@ export function generateCodeForFunctions(drawingTree){
   }
 
  })
+
  
  return stringArray
 
@@ -211,3 +213,69 @@ const generateSpaceString = (number) => {
   }
   return temp
 }
+
+export const generateRawTree = (drawingTree , visitingTree = [] , context = {}  ) => {
+  if(!drawingTree) return null
+
+  let resulingTree = {}
+  let treeKeys = Object.keys( drawingTree || {}  );
+
+  (treeKeys || []).forEach((key) => {    
+    let operation = drawingTree[key]
+    //let clonedContext = toJS(context)
+    let result = operation.generateRaw(operation , context)
+    if(visitingTree.includes(result.id)){
+      resulingTree[result.id] = null
+    }else{
+      visitingTree.push(result.id)
+      resulingTree[result.id] = generateRawTree(result.value , visitingTree.slice(0) , context)
+    }
+  })
+  if(treeKeys.length){
+    return resulingTree
+  }else{
+    return null
+  }
+}
+
+export const hoisting = (drawingTree) => {
+    console.log(drawingTree , 241)  
+}
+
+export const checkCycle = (drawingTree = {} , visitedValues = []) => {
+  let result = false
+  
+  for (let key of Object.keys(drawingTree || {})){
+
+    let value = drawingTree[key]
+    let clonedArray = visitedValues.slice(0)
+    console.log(key , visitedValues , 252)
+    if(value){
+      if(clonedArray.includes(key)){
+        result = result || true
+        return result
+      }else{
+        clonedArray.push(key)
+       result = result || checkCycle(value , clonedArray.slice(0))
+      }
+    }
+  }
+  return result
+}
+
+export const checkStructureBasedOnComponents = (drawingTree) => {
+    let keys = Object.keys(modeToComponent || {})
+    let result = false
+    for (let key of keys){
+        if (modeToComponent[key].customValidation){
+          result = result || modeToComponent[key].customValidation(drawingTree)
+          if (result){
+            return result
+          }
+        }
+    }
+    return result
+}
+
+
+

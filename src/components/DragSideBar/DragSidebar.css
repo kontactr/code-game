@@ -1,4 +1,4 @@
-.drag-side-bar{
+.drag-side-bar {
     width: 15%;
     height: calc(80vh - 20px);
     overflow: auto;
@@ -6,10 +6,10 @@
     flex-direction: column;
     margin-top: 20px;
     border: thistle 1px solid;
-    
+
 }
 
-.hello{
+.hello {
     width: 80%;
     height: calc(100% / 21);
     margin: auto;
@@ -17,5 +17,6 @@
     text-align: center;
     justify-content: center;
     border: thistle 1px solid;
-    
+    cursor: pointer;
+
 }

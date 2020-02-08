@@ -1,7 +1,7 @@
 import React from "react";
 import "./ConditionalFunction.css"
 import  getSequence from "../../Utils/sequenceCreator";
-import { toJS } from "mobx";
+import { toJS, observable } from "mobx";
 import { generateJSXForFunctions } from "../FunctionsIndex/FunctionsIndex";
 
 
@@ -27,6 +27,7 @@ class ConditionalFunction extends React.Component {
     const { conditionalState } = this.state || {};
     
     const { __internalSequence = [] } = operation.value
+
 
     return (
     <>
@@ -81,25 +82,31 @@ class ConditionalFunction extends React.Component {
   static composeValue = operation => {
     let a = getSequence()
     let b = getSequence()
-    return {
+    return observable({
       mode: "IF-ELSE",
-      value: {
+      value: observable({
         [a] : {
-          value: {
-
+          id: a,
+          value: observable({
+          }),
+          generateRaw: (operation) => {
+            return {id: operation.id , value: operation.value }
           }
         },
         [b] : {
-          value: {
-
+          id: b,
+          value: observable({
+          }),
+          generateRaw: (operation) => {
+            return {id: operation.id , value: operation.value }
           }
         },
         __internalSequence: [a,b]
-      },
+      }),
       renderChild: true,
       scalar: false,
       key: "IF-ELSE",
-    };
+    });
   };
 
  deComposeScalarValues = (containerTree) => {
@@ -143,11 +150,25 @@ class ConditionalFunction extends React.Component {
         
         let ifBlock = operationValue[inteseq[0]]
 
-        loopStringArray = loopStringArray.concat(this.genericStringStructure(ifBlock) , this.generateElseString() )
+        let ifBlockArray = this.genericStringStructure(ifBlock)
+        
+        if(!ifBlockArray.length){
+            ifBlockArray.push("// No operation ;\n")
+        }
+        
+        loopStringArray =  loopStringArray.concat( ifBlockArray)
+
+        loopStringArray = loopStringArray.concat(this.generateElseString())
         
         let elseBlock = operationValue[inteseq[1]]
         
-        loopStringArray = loopStringArray.concat(this.genericStringStructure(elseBlock))
+        let elseBlockArray = this.genericStringStructure(elseBlock)
+
+        if(!elseBlockArray.length){
+          elseBlockArray.push("// No operation ;\n")
+        }
+
+        loopStringArray = loopStringArray.concat(elseBlockArray)
 
         loopStringArray.push("} \n" )
     
@@ -188,6 +209,18 @@ class ConditionalFunction extends React.Component {
 
  generateElseString = (value) => {
    return `} else { \n`
+ }
+
+ generateRaw = (operation) => {
+   
+   return { id: operation.id , value: this.__generateValueForgenerateRaw(operation.value) }
+ }
+
+ __generateValueForgenerateRaw = (tree) => {
+   let value = tree.__internalSequence
+   const { conditionalState } = this.state
+   return Boolean(Number(conditionalState)) && { [value[0]] : tree[value[0]] } || { [value[1]] : tree[value[1]] }
+   
  }
 
 }

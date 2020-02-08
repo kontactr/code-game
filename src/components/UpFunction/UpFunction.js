@@ -34,6 +34,10 @@ class UpFunction extends React.Component {
   generateFunctionString = () => {
     return `moveForward();\n`;
   };
+
+  generateRaw = operation => {
+    return { id: operation.id, value: null };
+  };
 }
 
 export default UpFunction;

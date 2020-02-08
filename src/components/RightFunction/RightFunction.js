@@ -34,6 +34,10 @@ class RightFunction extends React.Component {
   generateFunctionString = () => {
     return `moveRight();\n`;
   };
+
+  generateRaw = operation => {
+    return { id: operation.id, value: null };
+  };
 }
 
 export default RightFunction;

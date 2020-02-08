@@ -39,6 +39,10 @@ class DownFunction extends React.Component {
   generateFunctionString = () => {
     return `moveBackward();\n`;
   };
+
+  generateRaw = operation => {
+    return { id: operation.id, value: null };
+  };
 }
 
 export default DownFunction;

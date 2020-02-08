@@ -1,20 +1,20 @@
-.loop-function {
-    min-height: 121px;
-    width: calc(100% - 2px);
-    overflow: scroll;
-    overflow-x: hidden;
-    flex-direction: column;
-    display: flex;
-    flex-wrap: nowrap;
-    color: thistle;
-    border: 1px solid white;
+  .loop-function {
+      min-height: 121px;
+      width: calc(100% - 2px);
+      overflow: scroll;
+      overflow-x: hidden;
+      flex-direction: column;
+      display: flex;
+      flex-wrap: nowrap;
+      color: thistle;
+      border: 1px solid white;
 
-}
+  }
 
-.loop-input {
-    color: black;
-}
+  .loop-input {
+      color: black;
+  }
 
-.if-else-select {
-    color: black;
-}
+  .if-else-select {
+      color: black;
+  }
