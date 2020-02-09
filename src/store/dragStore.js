@@ -33,7 +33,8 @@ class DragStore {
     RIGHT: { key: "RIGHT", mode: "RIGHT" },
     LOOP: { key: "LOOP", mode: "LOOP" },
     "IF-ELSE": { key: "IF-ELSE", mode: "IF-ELSE" },
-    FUNCTION: { key: "FUNCTION", mode: "FUNCTION" }
+    FUNCTION: { key: "FUNCTION", mode: "FUNCTION" },
+    ASYNC_FUNCTION: { key: "FUNCTION", mode: "FUNCTION" }
   });
 
   addButtonsToDrawer = ({ mode = "", key = "" } = {}) => {

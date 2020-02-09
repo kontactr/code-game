@@ -9,6 +9,7 @@ import ConditionalFunction from '../ConditionalFunction/ConditionalFunction'
 import { toJS } from "mobx";
 import "./FunctionIndex.css"
 import { Icon } from "antd";
+import AsyncFunctionFirst from "../FunctionFirst/AsyncFunctionFirst";
 
 
 const modeToComponent =  ({
@@ -46,6 +47,12 @@ const modeToComponent =  ({
     mode: "FUNCTION",
     Component: FunctionFirst,
     composeValue: FunctionFirst.composeValue,
+    customValidation: FunctionFirst.customValidation
+  },
+  ASYNC_FUNCTION: {
+    mode: "FUNCTION",
+    Component: AsyncFunctionFirst,
+    composeValue: AsyncFunctionFirst.composeValue,
     customValidation: FunctionFirst.customValidation
   },
 "IF-ELSE": {

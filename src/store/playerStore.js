@@ -13,6 +13,20 @@ class PlayerStore {
 
   registerGameStartCallback = () => {};
 
+  asyncFnctionQueue = [];
+
+  addAsycFunctionsToQueue = operation => {
+    if (Array.isArray(operation)) {
+      this.asyncFnctionQueue = this.asyncFnctionQueue.concat(operation || []);
+    } else {
+      this.asyncFnctionQueue.push(operation);
+    }
+  };
+
+  restAsyncFunctionQueue = (value = []) => {
+    this.asyncFnctionQueue = [];
+  };
+
   setCurrentPosition = position => {
     this.currentPosition = {
       x: position.x,

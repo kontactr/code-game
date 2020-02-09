@@ -236,28 +236,84 @@ class DrawCanvas extends Component {
             context: this.context,
             canvasHeight: 485,
             canvasWidth: 500
-          }).then(res => {
-            const {
-              currentSide = "B",
-              currentPosition
-            } = this.props.playerStore;
-            let xValue = currentPosition.x * currentPosition.defaultXModifier;
-            let yValue = currentPosition.y * currentPosition.defaultYModifier;
-            setCurrentUserPosition(
-              this.context,
-              currentSide,
-              allImages,
-              xValue,
-              yValue
-            );
-          });
+          })
+            .then(res => {
+              const {
+                currentSide = "B",
+                currentPosition
+              } = this.props.playerStore;
+              let xValue = currentPosition.x * currentPosition.defaultXModifier;
+              let yValue = currentPosition.y * currentPosition.defaultYModifier;
+              setCurrentUserPosition(
+                this.context,
+                currentSide,
+                allImages,
+                xValue,
+                yValue
+              );
+            })
+            .then(this.asyncQueueStartToRun);
         });
       } else {
         setGamePlayFunction(() => {});
+        this.asyncQueueStartToRun();
       }
     } else {
       setGamePlayFunction(() => {});
     }
+  };
+
+  asyncQueueStartToRun = async res => {
+    console.log(2566666);
+    const { playerStore = {} } = this.props;
+    const {
+      asyncFnctionQueue = [],
+      restAsyncFunctionQueue = () => {}
+    } = playerStore;
+
+    console.log(25666666, asyncFnctionQueue);
+    if ((asyncFnctionQueue || []).length) {
+      let addAsyncFunction = await this.performAsyncOperations();
+      let finalPromise = (asyncFnctionQueue || []).reduce((_, value) => {
+        return addAsyncFunction(value);
+      }, Promise.resolve());
+      finalPromise.then(() => {
+        restAsyncFunctionQueue();
+      });
+    } else {
+      // no op
+    }
+  };
+
+  performAsyncOperations = async () => {
+    let tempPromise = Promise.resolve();
+    const {
+      canvasStore = {},
+      playerStore = {},
+      dragStore = {},
+      progressStore = {}
+    } = this.props;
+
+    const { images = [] } = canvasStore;
+
+    const { dropDrawing = {} } = dragStore;
+
+    let allImages = await images;
+
+    return attachFunction => {
+      tempPromise = tempPromise.then(() => {
+        console.log("HERE", 295);
+        return performGameAnimation({
+          ...playerStore,
+          functionScalarArray: [attachFunction],
+          allImages,
+          context: this.context,
+          canvasHeight: 485,
+          canvasWidth: 500
+        });
+      });
+      return tempPromise;
+    };
   };
 }
 

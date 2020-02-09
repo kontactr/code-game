@@ -4,59 +4,59 @@ import  getSequence from "../../Utils/sequenceCreator";
 import { generateJSXForFunctions, deleteModeToComponent, addModeToComponent } from "../FunctionsIndex/FunctionsIndex";
 import { deleteButtonsToDrawer, addButtonsToDrawer } from "../../Utils/constants";
 import FunctionName from "./FunctionName/FunctionName"
+import "./FunctionFirst.css"
 import { inject, observer } from "mobx-react";
 import { toJS } from "mobx";
 
 
 class FunctionFirst extends React.Component {
 
-  state = {
-    functionName : ""
-  }
+  
 
   id  = getSequence()
 
-  childs = []
+  
 
   getMovementValues = () => {
-    return this.state.functionName
+    
   }
 
-  onChangeHandler = (e) => {
-    this.setState({
-      functionName: e.target.value
-    })
-  }
 
   componentWillUnmount(){
     const { dragStore = {} } = this.props || {};
     const { deleteButtonsToDrawer = () => {} } = dragStore
-    deleteModeToComponent("C_FC_"+this.id);
-    deleteButtonsToDrawer("C_FC_"+this.id)
+    deleteModeToComponent("ASYNC_C_FC_"+this.id);
+    deleteButtonsToDrawer("ASYNC_C_FC_"+this.id)
   }
 
   componentDidMount(){
     
 
-    const { dragStore = {} , operation } = this.props;
-    const { addButtonsToDrawer = () => {} ,  } = dragStore
+    const { dragStore = {} , operation , playerStore = () => {} } = this.props;
+    const { addButtonsToDrawer = () => {} ,   } = dragStore
+    const { addAsycFunctionsToQueue = () => {} } = playerStore
 
     
 
     addModeToComponent({
-      mode: "C_FC_" + this.id,
+      mode: "ASYNC_C_FC_" + this.id,
       Component: FunctionName,
       composeValue: (...rest) => {
         return {
-          mode: "C_FC_" + this.id,
-          value: "C_FC_" + this.id,
+          mode: "ASYNC_C_FC_" + this.id,
+          value: "ASYNC_C_FC_" + this.id,
           __value: operation.value,
-          key: "C_FC_" + this.id,
+          key: "ASYNC_C_FC_" + this.id,
           scalar: false,
           renderChild: true,
           parentId: operation.id,
           __type: "CALL",
-          deComposeScalarValues: FunctionName.deComposeScalarValues,
+          ___varient: "ASYNC",
+          deComposeScalarValues: (operation) => {
+            let composedValues = FunctionName.deComposeScalarValues(operation)
+            addAsycFunctionsToQueue(composedValues)
+            return []
+          },
           generateFunctionString: FunctionName.generateFunctionString,
           generateRaw: FunctionName.generateRaw
         }
@@ -64,8 +64,8 @@ class FunctionFirst extends React.Component {
     })
 
     addButtonsToDrawer({
-      mode: "C_FC_" + this.id,
-      key: "C_FC_" + this.id
+      mode: "ASYNC_C_FC_" + this.id,
+      key: "ASYNC_C_FC_" + this.id
     })
     
   }
@@ -76,7 +76,7 @@ class FunctionFirst extends React.Component {
 
     return (
     <>
-      <input className="function-name-input" type="text" value={"Name: C_FC_"+this.id} disabled>
+      <input type="text" className="function-name-input" value={"Name: ASYNC_C_FC_"+this.id} disabled>
       
       </input>
       <div
@@ -106,12 +106,13 @@ class FunctionFirst extends React.Component {
   static composeValue = operation => {
     
     return {
-      mode: "FUNCTION",
+      mode: "ASYNC_FUNCTION",
       value: {
       },
       scalar: false,
       __type: "DEFINATION",
-      key: "FUNCTION",
+      __varient: "ASYNC",
+      key: "ASYNC_FUNCTION",
       
     };
 
@@ -124,7 +125,7 @@ class FunctionFirst extends React.Component {
  generateFunctionString = (containerTree) => {
   
   if(containerTree.scalar) { return [containerTree.generateFunctionString()] }
-  else if(containerTree.mode === "FUNCTION" ){
+  else if(containerTree.mode === "ASYNC_FUNCTION" ){
     let functionName = containerTree.getMovementValue && containerTree.getMovementValue()
     let loopStringArray = [this.generateInternalFunctionString(functionName)]
     
@@ -133,7 +134,7 @@ class FunctionFirst extends React.Component {
         if(fun.scalar){
           loopStringArray.push(fun.generateFunctionString())
         
-        }else if(fun.mode === "FUNCTION"){
+        }else if(fun.mode === "ASYNC_FUNCTION"){
          loopStringArray =  loopStringArray.concat(this.generateFunctionString(fun))
         }else{
           if(fun.deComposeScalarValues)
@@ -157,65 +158,18 @@ class FunctionFirst extends React.Component {
  }
  
  generateInternalFunctionString = (value) => {
-   return `function C_FC_${this.id}() {\n`
+   return `async function C_FC_${this.id}() {\n`
  }
 
  generateRaw = (operation , context) => {
-  
-  
   if(context && context.__fncInternal === "CALL"){
     context.__fncInternal = undefined
     return {id: operation.id , value: {}};
    }else{
      return {id: operation.id , value: {}};
    }
-    
  }
-
- static customValidation = (drawingTree , definations = [], visited = {}) => {
-   let result = false
-   let scope = definations.concat( [] )
-   
-   
-   let objectKeys = Object.keys(drawingTree || {})
-   for(let key of objectKeys){
-     if(drawingTree[key].__type === "DEFINATION"){
-       scope.push(drawingTree[key].id)
-     }else if(drawingTree[key].__type === "CALL"){
-       if(scope.includes(drawingTree[key].parentId)){
-          // pass operation
-       }else{
-          result = result || true
-       }
-     }
-     if(result) return result
-   }
-   
-
-   for(let key of objectKeys){
-   
-
-     let resultCompose = drawingTree[key].generateRaw(drawingTree[key] , {__condition: "BOTH"} )
-      if(!resultCompose.value      /*drawingTree[key].scalar*/){ // we can direct use scalar if we don't want to use generateRaw values
-        // no op                // just remove generate raw call and replace !resultCompose.value with
-                                // drawingTree[key].scalar
-      }else if(resultCompose.__type === "CALL"){
-        // no op
-      }else{
-        if(!visited[key]){
-          let clonedScope = scope.slice(0)
-          visited[key] = true
-        result = result || FunctionFirst.customValidation(resultCompose.value , clonedScope , visited);
-        }
-        
-      }
-      if(result) return result
-   }
-
-   return result
-   
- }
-
+ 
 }
 
-export default   inject("dragStore") (observer(FunctionFirst)) 
+export default   inject("dragStore" , "playerStore") (observer(FunctionFirst)) 

@@ -17,14 +17,14 @@ export default class FunctionName extends Component {
 
     if (containerTree.scalar) {
       return [containerTree];
-    } else if ((containerTree.mode || "").startsWith("C_FC_")) {
+    } else if ((containerTree.mode || "").includes("C_FC_")) {
       //let loopLimiter = containerTree.getMovementValue && containerTree.getMovementValue()
 
       Object.keys(containerTree.__value || {}).forEach(functionSyntax => {
         let fun = containerTree.__value[functionSyntax];
         if (fun.scalar) {
           flatMapArray.push(fun);
-        } else if ((fun.mode || "").startsWith("C_FC_")) {
+        } else if ((fun.mode || "").includes("C_FC_")) {
           flatMapArray = flatMapArray.concat(this.deComposeScalarValues(fun));
         } else {
           if (fun.deComposeScalarValues)
