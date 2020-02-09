@@ -1,0 +1,6 @@
+progress pop-up issue:
+    As the modal opens in the sync mode, 
+    browser doesn't get time to render it instant
+    because the function which contains the model
+    is running, we need to async the after statements
+    till the modal opens.
