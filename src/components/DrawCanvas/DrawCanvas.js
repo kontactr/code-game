@@ -271,7 +271,6 @@ class DrawCanvas extends Component {
       restAsyncFunctionQueue = () => {}
     } = playerStore;
 
-    console.log(25666666, asyncFnctionQueue);
     if ((asyncFnctionQueue || []).length) {
       let addAsyncFunction = await this.performAsyncOperations();
       let finalPromise = (asyncFnctionQueue || []).reduce((_, value) => {
@@ -302,7 +301,6 @@ class DrawCanvas extends Component {
 
     return attachFunction => {
       tempPromise = tempPromise.then(() => {
-        console.log("HERE", 295);
         return performGameAnimation({
           ...playerStore,
           functionScalarArray: [attachFunction],
