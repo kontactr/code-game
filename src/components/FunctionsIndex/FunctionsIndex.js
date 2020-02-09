@@ -79,7 +79,8 @@ export const generateComposeValue = (mode, pathIds, drawingData) => {
 
 export const generateJSXForFunctions = (drawingTree = {}) => {
   let objectKeys = Object.keys(drawingTree || {})
-  if(!objectKeys.length) {return (<></>)}
+  if(!objectKeys.length) {
+    return (<></>)}
     
   return objectKeys.map((operation) => {
     let value = drawingTree[operation].value;
@@ -281,5 +282,85 @@ export const checkStructureBasedOnComponents = (drawingTree) => {
     return result
 }
 
+export const convertIntoOptimiseScalar = (optimiseTree , startPoint) => {
+  let newArray = []
+  let start = [startPoint.x , startPoint.y]
+  while (optimiseTree[start]){
+    newArray.push(optimiseTree[start].drawFunc)
+    start = optimiseTree[start].value
+  }
+  return newArray;
+}
+
+export const cancelCycle = (start , visited = {}) => {
+  if(!start || !visited) return {}
+  let temp = start
+  let backup = start
+  while (temp){
+    temp = visited[temp]
+    //visited[backup] = undefined
+    delete visited[backup]
+    backup = temp
+  }
+}
+
+export const optimizeDrawing = (currentPosition,functionsToRun , visited = {}) => {
+    let x = currentPosition.x;
+    let y = currentPosition.y;
+    visited[[x,y]] = undefined;
+    (functionsToRun || []).forEach((func) => {
+      let location = {x , y}
+      let startPoint = [x,y]
+      
+      
+      let result = __checkAllFnctions(location , func.mode);
+      if(result){
+        let new_x = location.x;
+        let new_y = location.y;
+        cancelCycle([new_x , new_y] , visited)
+        visited[startPoint] = {value: [new_x , new_y], drawFunc: func }
+        x = new_x
+        y = new_y
+      }
+
+    });
+    return visited;
+
+}
+
+const __checkAllFnctions = (currentPosition , mode = 'UP') => {
+  switch (mode){
+    case "UP": return __UpFunctions(currentPosition)
+    case "DOWN": return __DownFunctions(currentPosition)
+    case "RIGHT": return __RightFunctions(currentPosition)
+    case "LEFT": return __LeftFunctions(currentPosition)
+    default:
+          return __UpFunctions(currentPosition)
+  }
+}
+
+const __UpFunctions = (currentPosition) => {
+  if(currentPosition.y === 0 ) return false
+   currentPosition.y -= 1
+  return true
+}
+
+const __DownFunctions = (currentPosition) => {
+  if(currentPosition.y === 3 ) return false
+  currentPosition.y += 1
+  return true
+}
+
+const __LeftFunctions = (currentPosition) => {
+  if(currentPosition.x === 0 ) return false
+  currentPosition.x -= 1
+  return true
+}
+
+const __RightFunctions = (currentPosition) => {
+  if(currentPosition.x === 3 ) return false
+  currentPosition.x += 1
+  return true
+}
 
 

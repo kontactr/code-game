@@ -7,7 +7,9 @@ import {
   hoisting,
   generateRawTree,
   checkCycle,
-  checkStructureBasedOnComponents
+  checkStructureBasedOnComponents,
+  optimizeDrawing,
+  convertIntoOptimiseScalar
 } from "../FunctionsIndex/FunctionsIndex";
 import {
   drawInitPlayer,
@@ -88,6 +90,7 @@ class DrawCanvas extends Component {
     let checkCyclicTreeForCycle = false;
     let scopeError = false;
     let functionsArray = [];
+    let optimiseArray = [];
 
     toggleProgressDisplay();
 
@@ -198,11 +201,37 @@ class DrawCanvas extends Component {
     }
 
     if (overallProgress) {
-      if (functionsArray.length) {
+      try {
+        changeState("optimise", STATUSES.ACTIVE, 100);
+        let optimiseTree = optimizeDrawing({ x: 0, y: 3 }, functionsArray, {});
+        optimiseArray = convertIntoOptimiseScalar(optimiseTree, {
+          x: 0,
+          y: 3
+        });
+
+        if (optimiseArray === undefined) {
+          changeState("optimise", STATUSES.EXCEPTION, 100);
+          overallProgress = false;
+        } else {
+          changeState("optimise", STATUSES.SUCCESS, 100);
+        }
+      } catch (e) {
+        console.log(e);
+        overallProgress = false;
+        changeState("optimise", STATUSES.EXCEPTION, 100);
+      }
+    } else {
+      overallProgress = false;
+      changeState("optimise", STATUSES.EXCEPTION, 100);
+    }
+
+    if (overallProgress) {
+      console.log("HERE", optimiseArray.length);
+      if (optimiseArray.length) {
         setGamePlayFunction(() => {
           performGameAnimation({
             ...playerStore,
-            functionScalarArray: functionsArray || [],
+            functionScalarArray: optimiseArray || [],
             allImages,
             context: this.context,
             canvasHeight: 485,

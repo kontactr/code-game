@@ -39,7 +39,11 @@ class ProgressStore {
       rawTree: this.generateState(STATUSES_PERCENT.START, STATUSES.NORMAL),
       cycleCheck: this.generateState(STATUSES_PERCENT.START, STATUSES.NORMAL),
       scopeCheck: this.generateState(STATUSES_PERCENT.START, STATUSES.NORMAL),
-      convertScalar: this.generateState(STATUSES_PERCENT.START, STATUSES.NORMAL)
+      convertScalar: this.generateState(
+        STATUSES_PERCENT.START,
+        STATUSES.NORMAL
+      ),
+      optimise: this.generateState(STATUSES_PERCENT.START, STATUSES.NORMAL)
     });
   };
 }

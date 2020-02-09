@@ -20,7 +20,8 @@ export const STATE_DISPLAY_NAMES = {
   rawTree: "Generate raw values",
   cycleCheck: "Cycle check",
   scopeCheck: "Scope check",
-  convertScalar: "Compile to raw functions"
+  convertScalar: "Compile to raw functions",
+  optimise: "Optimise raw functions"
 };
 
 export const STATUSES_PERCENT = { START: 0, COMPLETE: 100 };
