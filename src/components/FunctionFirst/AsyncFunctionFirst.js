@@ -158,7 +158,7 @@ class FunctionFirst extends React.Component {
  }
  
  generateInternalFunctionString = (value) => {
-   return `async function C_FC_${this.id}() {\n`
+   return `async function ASYC_C_FC_${this.id}() {\n`
  }
 
  generateRaw = (operation , context) => {
