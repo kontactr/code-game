@@ -4,3 +4,10 @@ progress pop-up issue:
     because the function which contains the model
     is running, we need to async the after statements
     till the modal opens.
+
+improve async syntax:
+    Wrap into settimeout function with 0 wait time.
+    and we can also use settimeout in async queue while
+    calling functions. As we have already used/implemented
+    reduce function it's easy for us to return promise.
+    It will work like a sequence.
