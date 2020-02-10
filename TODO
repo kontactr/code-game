@@ -11,3 +11,31 @@ improve async syntax:
     calling functions. As we have already used/implemented
     reduce function it's easy for us to return promise.
     It will work like a sequence.
+
+hoisting:
+    Currently hoisting is not supported because
+    user can only add statements in a top-down
+    approach beacuse of this currently we don't 
+    need hoisting. user has to add defination 
+    first before using it. If we add this in future,
+    we will have to change in the custom validation
+    function. we need to separate the comparision
+    of definations and calls. first we have to search
+    for definations, then for calls, then for scops.
+    or definations on the first level and 
+    scope and call are on the second level.
+    Hoisting is in need when we add support
+    for statement drag and drop means statement
+    order change support.
+
+context:
+     For performance improvement, we need to add context
+     in the custom validations of the mods. which help
+     us to prevent dual check for the tree. for example
+     currently we are using the same comparision function
+     for async and normal functions. if both are present
+     in the structure, we don't have to run comparision
+     function both times. any other one can handle the
+     cases. With the help of the context we can check
+     whether we will have to call it or not. so In the
+     next time we can skip it.
